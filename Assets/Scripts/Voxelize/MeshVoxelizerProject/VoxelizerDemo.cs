@@ -12,7 +12,6 @@ namespace MeshVoxelizerProject
 
         public bool drawAABBTree;
 
-        private MeshVoxelizer m_voxelizer;
 
         private void Start()
         {
@@ -39,12 +38,12 @@ namespace MeshVoxelizerProject
 
             Box3 bounds = new Box3(mesh.bounds.min, mesh.bounds.max);
 
-            m_voxelizer = new MeshVoxelizer(size, size, size);
-            m_voxelizer.Voxelize(mesh.vertices, mesh.triangles, bounds);
+            MeshVoxelizer.Init(size, size, size);
+            MeshVoxelizer.Voxelize(mesh.vertices, mesh.triangles, bounds);
 
             Vector3 scale = new Vector3(bounds.Size.x / size, bounds.Size.y / size, bounds.Size.z / size);
             Vector3 m = new Vector3(bounds.Min.x, bounds.Min.y, bounds.Min.z);
-            mesh = CreateMesh(m_voxelizer.Voxels, scale, m);
+            mesh = CreateMesh(MeshVoxelizer.Voxels, scale, m);
 
             GameObject go = new GameObject("Voxelized");
             go.transform.parent = transform;
@@ -63,11 +62,11 @@ namespace MeshVoxelizerProject
         {
             var camera = Camera.current;
 
-            if (drawAABBTree && m_voxelizer != null)
+            if (drawAABBTree)
             {
                 Matrix4x4 m = transform.localToWorldMatrix;
 
-                foreach (Box3 box in m_voxelizer.Bounds)
+                foreach (Box3 box in MeshVoxelizer.Bounds)
                 {
                     DrawLines.DrawBounds(camera, Color.red, box, m);
                 }

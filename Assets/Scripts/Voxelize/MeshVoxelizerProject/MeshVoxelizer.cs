@@ -7,22 +7,22 @@ using UnityEngine;
 //https://github.com/Scrawk/Mesh-Voxelization
 namespace MeshVoxelizerProject
 {
-    public class MeshVoxelizer
+    public static class MeshVoxelizer
     {
 
-        public int Count { get; private set; }
+        public static int Count { get; private set; }
 
-        public int Width { get; private set; }
+        public static int Width { get; private set; }
 
-        public int Height { get; private set; }
+        public static int Height { get; private set; }
 
-        public int Depth { get; private set; }
+        public static int Depth { get; private set; }
 
-        public int[,,] Voxels { get; private set; }
+        public static int[,,] Voxels { get; private set; }
 
-        public List<Box3> Bounds { get; private set; }
+        public static List<Box3> Bounds { get; private set; }
 
-        public MeshVoxelizer(int width, int height, int depth)
+        public static void Init(int width, int height, int depth)
         {
 
             Width = width;
@@ -32,7 +32,7 @@ namespace MeshVoxelizerProject
             Voxels = new int[width, height, depth];
         }
 
-        public Mesh Voxelize(IList<Vector3> vertices, IList<int> indices, Box3 bounds)
+        public static Mesh Voxelize(IList<Vector3> vertices, IList<int> indices, Box3 bounds)
         {
             Array.Clear(Voxels, 0, Voxels.Length);
 
@@ -97,7 +97,7 @@ namespace MeshVoxelizerProject
 
         #region Utilities
 
-        private void AddRightQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
+        private static void AddRightQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
         {
             int count = verts.Count;
 
@@ -113,7 +113,7 @@ namespace MeshVoxelizerProject
             indices.Add(count + 5); indices.Add(count + 4); indices.Add(count + 3);
         }
 
-        private void AddLeftQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
+        private static void AddLeftQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
         {
             int count = verts.Count;
 
@@ -129,7 +129,7 @@ namespace MeshVoxelizerProject
             indices.Add(count + 3); indices.Add(count + 4); indices.Add(count + 5);
         }
 
-        private void AddTopQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
+        private static void AddTopQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
         {
             int count = verts.Count;
 
@@ -145,7 +145,7 @@ namespace MeshVoxelizerProject
             indices.Add(count + 3); indices.Add(count + 4); indices.Add(count + 5);
         }
 
-        private void AddBottomQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
+        private static void AddBottomQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
         {
             int count = verts.Count;
 
@@ -161,7 +161,7 @@ namespace MeshVoxelizerProject
             indices.Add(count + 5); indices.Add(count + 4); indices.Add(count + 3);
         }
 
-        private void AddFrontQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
+        private static void AddFrontQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
         {
             int count = verts.Count;
 
@@ -177,7 +177,7 @@ namespace MeshVoxelizerProject
             indices.Add(count + 5); indices.Add(count + 4); indices.Add(count + 3);
         }
 
-        private void AddBackQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
+        private static void AddBackQuad(List<Vector3> verts, List<int> indices, Vector3 scale, Vector3 pos)
         {
             int count = verts.Count;
 
@@ -193,7 +193,7 @@ namespace MeshVoxelizerProject
             indices.Add(count + 3); indices.Add(count + 4); indices.Add(count + 5);
         }
 
-        private Mesh CreateMesh(int[,,] voxels, Vector3 scale, Vector3 min)
+        public static Mesh CreateMesh(int[,,] voxels, Vector3 scale, Vector3 min)
         {
             List<Vector3> verts = new List<Vector3>();
             List<int> indices = new List<int>();
@@ -244,6 +244,6 @@ namespace MeshVoxelizerProject
 
             return mesh;
         }
+        #endregion
     }
-    #endregion
 }
