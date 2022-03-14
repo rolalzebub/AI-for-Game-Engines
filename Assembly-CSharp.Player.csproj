@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{BAABB295-A0D3-0026-0048-15FA25928375}</ProjectGuid>
+    <ProjectGuid>{B35DCEE5-D4D9-A5FD-F574-5A783A8CD919}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -56,15 +56,13 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\GunController.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshSurface.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\tims scrips\mouseLook.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshModifierVolume.cs" />
     <Compile Include="Assets\Scripts\Pathfinding.cs" />
     <Compile Include="Assets\Scripts\GridMap.cs" />
     <Compile Include="Assets\Scripts\NavMeshGenerator.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshLink.cs" />
-    <Compile Include="Assets\Scripts\BulletController.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshModifier.cs" />
     <Compile Include="Assets\Scripts\NavigableObject.cs" />
   </ItemGroup>
@@ -633,15 +631,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.Timeline.Player.csproj">
-      <Project>{158D6EA7-CDBD-772D-A052-026874086E0D}</Project>
+      <Project>{65A780AD-BBBA-4FCA-040C-55989F818094}</Project>
       <Name>Unity.Timeline.Player</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.Player.csproj">
-      <Project>{8EB12C75-E8D8-8114-2AA9-038D7431EEE6}</Project>
+      <Project>{AD1C52E5-AB25-B40A-A77F-174B4E1F54F8}</Project>
       <Name>Unity.TextMeshPro.Player</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.Player.csproj">
-      <Project>{32BD788C-B70A-8D30-7755-45AED3715AFF}</Project>
+      <Project>{D65F88D8-D833-E8DD-8EF3-AA08F23EDF57}</Project>
       <Name>UnityEngine.UI.Player</Name>
     </ProjectReference>
   </ItemGroup>
