@@ -56,17 +56,15 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\GunController.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshSurface.cs" />
-    <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshModifierVolume.cs" />
     <Compile Include="Assets\Scripts\Pathfinding.cs" />
     <Compile Include="Assets\Scripts\GridMap.cs" />
     <Compile Include="Assets\Scripts\NavMeshGenerator.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshLink.cs" />
-    <Compile Include="Assets\Scripts\BulletController.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshModifier.cs" />
     <Compile Include="Assets\Scripts\NavigableObject.cs" />
+    <Compile Include="Assets\Scripts\tims scrips\mouseLook.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Low Poly Graveyard\Materials\vertexcolorsstandard.shader" />
