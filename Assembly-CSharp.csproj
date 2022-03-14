@@ -65,6 +65,7 @@
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshModifier.cs" />
     <Compile Include="Assets\Scripts\NavigableObject.cs" />
     <Compile Include="Assets\Scripts\tims scrips\mouseLook.cs" />
+    <Compile Include="Assets\Scripts\tims scrips\playerMovement.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
