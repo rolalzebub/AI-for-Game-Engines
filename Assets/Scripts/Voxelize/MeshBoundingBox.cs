@@ -41,6 +41,12 @@ public class MeshBoundingBox
     {
         bounds = new Bounds(center, size);
     }
+    public MeshBoundingBox(float min, float max)
+    {
+        var MinVec = new Vector3(min, min, min);
+        var MaxVec = new Vector3(max, max, max);
+        bounds = new Bounds(MinVec + (MaxVec - MinVec), MaxVec - MinVec);
+    }
 
     #endregion
 

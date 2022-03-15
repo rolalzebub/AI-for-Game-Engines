@@ -27,7 +27,7 @@ namespace MeshVoxelizerProject
 
 		private IList<int> Indices { get; set; }
 
-        private int NumFaces { get; set; }
+        private int NumTriangles { get; set; }
 
         private int FreeNode { get; set; }
 
@@ -45,10 +45,10 @@ namespace MeshVoxelizerProject
         {
             Vertices = vertices;
             Indices = indices;
-            NumFaces = indices.Count / 3;
+            NumTriangles = indices.Count / 3;
 
-            Nodes = new List<AABBNode>((int)(NumFaces * 1.5));
-            Faces = new int[NumFaces];
+            Nodes = new List<AABBNode>((int)(NumTriangles * 1.5));
+            Faces = new int[NumTriangles];
             FaceBounds = new List<Box3>();
 
             Build();
@@ -76,7 +76,7 @@ namespace MeshVoxelizerProject
             CurrentDepth = 0;
             FaceBounds.Clear();
 
-            for (int i = 0; i < NumFaces; i++)
+            for (int i = 0; i < NumTriangles; i++)
             {
                 Box3 top = CalculateFaceBounds(i);
 
@@ -86,7 +86,7 @@ namespace MeshVoxelizerProject
 
             CurrentDepth = 0;
 	        FreeNode = 1;
-            BuildRecursive(0, 0, NumFaces);
+            BuildRecursive(0, 0, NumTriangles);
 
         }
 
@@ -170,7 +170,7 @@ namespace MeshVoxelizerProject
             bool hit = false;
 	        int minIndex = 0;
 
-            for (int i = 0; i < NumFaces; ++i)
+            for (int i = 0; i < NumTriangles; ++i)
             {
                 Vector3 a = Vertices[Indices[i*3+0]];
                 Vector3 b = Vertices[Indices[i*3+1]];
