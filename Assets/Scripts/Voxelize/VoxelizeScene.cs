@@ -9,11 +9,11 @@ public class VoxelizeScene : MonoBehaviour
     public int gridResolution;
     public float XZCellSize;
     public float YCellSize;
-
+    public float walkableSlopeAngle = 45.0f;
     void Start()
     {
         allSceneMeshes = new List<SceneMeshObject>(FindObjectsOfType<SceneMeshObject>());
-        ReplaceSceneMeshesWithVoxels();
+        //ReplaceSceneMeshesWithVoxels();
     }
 
     public void ReplaceSceneMeshesWithVoxels()
@@ -59,21 +59,20 @@ public class VoxelizeScene : MonoBehaviour
         {
             meshesToCombine[i].mesh = allSceneMeshes[i].GetMesh().sharedMesh;
             meshesToCombine[i].transform = allSceneMeshes[i].GetMesh().transform.localToWorldMatrix;
+
         }
         
         sceneMesh.CombineMeshes(meshesToCombine);
 
+        Heightfield sceneHeightfield = CreateHeightFieldGrid(sceneMesh.bounds);
+        sceneHeightfield.CheckHeightfieldAgainstMesh(sceneMesh);
 
-        var go = Instantiate(new GameObject());
-        go.AddComponent<MeshFilter>().sharedMesh = CreateHeightField(sceneMesh.bounds);
-        go.AddComponent<MeshRenderer>();
     }
 
-    Mesh CreateHeightField(Bounds sceneBounds)
+    Heightfield CreateHeightFieldGrid(Bounds sceneBounds)
     {
         //set up heightfield mesh for debug rendering
-        Mesh heightfieldMesh = new Mesh();
-        heightfieldMesh.bounds = sceneBounds;
+        
         Bounds voxelBound = new Bounds();
         voxelBound.size = new Vector3(XZCellSize, YCellSize, XZCellSize);
 
@@ -82,154 +81,176 @@ public class VoxelizeScene : MonoBehaviour
         int ZCellsCount = Mathf.CeilToInt(sceneBounds.size.z / XZCellSize);
         int YCellsCount = Mathf.CeilToInt(sceneBounds.size.y / YCellSize);
 
-        List<Vector3> newVertsForGrid = new List<Vector3>();
-        List<int> newTrisForGrid = new List<int>();
+        Heightfield heightfield = new Heightfield(XZCellSize, YCellSize, walkableSlopeAngle);
+        heightfield.verts = new List<Vector3>();
+        heightfield.gridRows = XCellsCount;
+        heightfield.gridColumns = YCellsCount;
 
-        //need this to be a 32 bit index buffer because we are gonna create MANY verts here before simplifying
-        heightfieldMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-        
-        for (int i = 0; i < YCellsCount - 1; i++)
+        for (int i = 0; i < XCellsCount - 1; i+=2)
         {
-            for (int j = 0; j < ZCellsCount - 1; j++)
+            for (int j = 0; j < ZCellsCount - 1; j+=2)
             {
-                for(int k = 0; k < XCellsCount - 1; k++)
+                for(int k = 0; k < YCellsCount; k+=2)
                 {
-                    //place verts for voxelizing space within bounds
-                    //i.e. create verts for a cube
+                    //create a grid for "voxelizing" mesh
                     Vector3 newVert = new Vector3()
                     {
-                        x = k * XZCellSize,
-                        y = i * YCellSize,
+                        x = i * XZCellSize,
+                        y = k * YCellSize,
                         z = j * XZCellSize
                     };
 
                     Vector3 newVert2 = new Vector3()
                     {
-                        x = k * XZCellSize,
-                        y = (i + 1) * YCellSize,
+                        x = i * XZCellSize,
+                        y = (k + 1) * YCellSize,
                         z = j * XZCellSize
                     };
 
                     Vector3 newVert3 = new Vector3()
                     {
-                        x = (k + 1) * XZCellSize,
-                        y = (i + 1) * YCellSize,
+                        x = (i + 1) * XZCellSize,
+                        y = (k + 1) * YCellSize,
                         z = j * XZCellSize
                     };
 
                     Vector3 newVert4 = new Vector3()
                     {
-                        x = (k + 1) * XZCellSize,
-                        y = i * YCellSize,
+                        x = (i + 1) * XZCellSize,
+                        y = k * YCellSize,
                         z = j * XZCellSize
                     };
 
+                    heightfield.verts.Add(newVert);
+                    heightfield.verts.Add(newVert2);
+                    heightfield.verts.Add(newVert3);
+                    heightfield.verts.Add(newVert4);
+
                     Vector3 newVert5 = new Vector3()
                     {
-                        x = k * XZCellSize,
-                        y = i * YCellSize,
+                        x = i * XZCellSize,
+                        y = k * YCellSize,
                         z = (j + 1) * XZCellSize
                     };
 
                     Vector3 newVert6 = new Vector3()
                     {
-                        x = k * XZCellSize,
-                        y = (i + 1) * YCellSize,
+                        x = i * XZCellSize,
+                        y = (k + 1) * YCellSize,
                         z = (j + 1) * XZCellSize
                     };
 
                     Vector3 newVert7 = new Vector3()
                     {
-                        x = (k + 1) * XZCellSize,
-                        y = (i + 1) * YCellSize,
+                        x = (i + 1) * XZCellSize,
+                        y = (k + 1) * YCellSize,
                         z = (j + 1) * XZCellSize
                     };
 
                     Vector3 newVert8 = new Vector3()
                     {
-                        x = (k + 1) * XZCellSize,
-                        y = i * YCellSize,
+                        x = (i + 1) * XZCellSize,
+                        y = k * YCellSize,
                         z = (j + 1) * XZCellSize
                     };
-
-                    newVertsForGrid.Add(newVert);
-                    int firstVert = newVertsForGrid.Count - 1;
-                    newVertsForGrid.Add(newVert2);
-                    newVertsForGrid.Add(newVert3);
-                    newVertsForGrid.Add(newVert4);
-                    newVertsForGrid.Add(newVert5);
-                    newVertsForGrid.Add(newVert6);
-                    newVertsForGrid.Add(newVert7);
-                    newVertsForGrid.Add(newVert8);
-                    
-                    //front face of quad
-                    newTrisForGrid.Add(0 + firstVert);
-                    newTrisForGrid.Add(1 + firstVert);
-                    newTrisForGrid.Add(2 + firstVert);
-
-                    newTrisForGrid.Add(2 + firstVert);
-                    newTrisForGrid.Add(3 + firstVert);
-                    newTrisForGrid.Add(0 + firstVert);
-
-                    //right face of quad
-                    newTrisForGrid.Add(3 + firstVert);
-                    newTrisForGrid.Add(2 + firstVert);
-                    newTrisForGrid.Add(6 + firstVert);
-
-                    newTrisForGrid.Add(6 + firstVert);
-                    newTrisForGrid.Add(7 + firstVert);
-                    newTrisForGrid.Add(3 + firstVert);
-
-                    //back face of quad
-                    newTrisForGrid.Add(7 + firstVert);
-                    newTrisForGrid.Add(6 + firstVert);
-                    newTrisForGrid.Add(5 + firstVert);
-
-                    newTrisForGrid.Add(5 + firstVert);
-                    newTrisForGrid.Add(4 + firstVert);
-                    newTrisForGrid.Add(7 + firstVert);
-
-                    //left face of quad
-                    newTrisForGrid.Add(4 + firstVert);
-                    newTrisForGrid.Add(5 + firstVert);
-                    newTrisForGrid.Add(1 + firstVert);
-
-                    newTrisForGrid.Add(1 + firstVert);
-                    newTrisForGrid.Add(0 + firstVert);
-                    newTrisForGrid.Add(4 + firstVert);
-
-                    //top face of quad
-                    newTrisForGrid.Add(1 + firstVert);
-                    newTrisForGrid.Add(5 + firstVert);
-                    newTrisForGrid.Add(6 + firstVert);
-
-                    newTrisForGrid.Add(6 + firstVert);
-                    newTrisForGrid.Add(2 + firstVert);
-                    newTrisForGrid.Add(1 + firstVert);
-
-                    //bottom face of quad
-                    newTrisForGrid.Add(4 + firstVert);
-                    newTrisForGrid.Add(0 + firstVert);
-                    newTrisForGrid.Add(3 + firstVert);
-
-                    newTrisForGrid.Add(3 + firstVert);
-                    newTrisForGrid.Add(7 + firstVert);
-                    newTrisForGrid.Add(4 + firstVert);
+                    heightfield.verts.Add(newVert5);
+                    heightfield.verts.Add(newVert6);
+                    heightfield.verts.Add(newVert7);
+                    heightfield.verts.Add(newVert8);
 
                 }
             }
         }
-        heightfieldMesh.SetVertices(newVertsForGrid);
-        heightfieldMesh.SetTriangles(newTrisForGrid, 0);
-        heightfieldMesh.RecalculateBounds();
-        heightfieldMesh.RecalculateNormals();
 
-        return heightfieldMesh;
+        return heightfield;
+
+        
     }
+
+    void CheckVoxelTriangleIntersection()
+    {
+
+    }
+
+    #region Add Faces To Quads
+    void AddFrontFaceQuad(ref List<int> newTrisForGrid, int firstVert)
+    {
+        //front face of quad
+        newTrisForGrid.Add(0 + firstVert);
+        newTrisForGrid.Add(1 + firstVert);
+        newTrisForGrid.Add(2 + firstVert);
+
+        newTrisForGrid.Add(2 + firstVert);
+        newTrisForGrid.Add(3 + firstVert);
+        newTrisForGrid.Add(0 + firstVert);
+    }
+
+    void AddRightFaceQuad(ref List<int> newTrisForGrid, int firstVert)
+    {
+        //right face of quad
+        newTrisForGrid.Add(3 + firstVert);
+        newTrisForGrid.Add(2 + firstVert);
+        newTrisForGrid.Add(6 + firstVert);
+
+        newTrisForGrid.Add(6 + firstVert);
+        newTrisForGrid.Add(7 + firstVert);
+        newTrisForGrid.Add(3 + firstVert);
+    }
+
+    void AddBackFaceQuad(ref List<int> newTrisForGrid, int firstVert)
+    {
+        //back face of quad
+        newTrisForGrid.Add(7 + firstVert);
+        newTrisForGrid.Add(6 + firstVert);
+        newTrisForGrid.Add(5 + firstVert);
+
+        newTrisForGrid.Add(5 + firstVert);
+        newTrisForGrid.Add(4 + firstVert);
+        newTrisForGrid.Add(7 + firstVert);
+    }
+
+    void AddLeftFaceQuad(ref List<int> newTrisForGrid, int firstVert)
+    {
+        //left face of quad
+        newTrisForGrid.Add(4 + firstVert);
+        newTrisForGrid.Add(5 + firstVert);
+        newTrisForGrid.Add(1 + firstVert);
+
+        newTrisForGrid.Add(1 + firstVert);
+        newTrisForGrid.Add(0 + firstVert);
+        newTrisForGrid.Add(4 + firstVert);
+    }
+
+    void AddTopFaceQuad(ref List<int> newTrisForGrid, int firstVert)
+    {
+        //top face of quad
+        newTrisForGrid.Add(1 + firstVert);
+        newTrisForGrid.Add(5 + firstVert);
+        newTrisForGrid.Add(6 + firstVert);
+
+        newTrisForGrid.Add(6 + firstVert);
+        newTrisForGrid.Add(2 + firstVert);
+        newTrisForGrid.Add(1 + firstVert);
+    }
+
+    void AddBottomFaceQuad(ref List<int> newTrisForGrid, int firstVert)
+    {
+        //bottom face of quad
+        newTrisForGrid.Add(4 + firstVert);
+        newTrisForGrid.Add(0 + firstVert);
+        newTrisForGrid.Add(3 + firstVert);
+
+        newTrisForGrid.Add(3 + firstVert);
+        newTrisForGrid.Add(7 + firstVert);
+        newTrisForGrid.Add(4 + firstVert);
+    }
+    #endregion
 }
+
 
 public struct Voxel
 {
-    Vector3[] vertices;
-    int[] triangles;
+    public int[] gridIndex;
+
 }
+
