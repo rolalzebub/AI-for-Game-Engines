@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public class PlayerController : MonoBehaviour
 {
-    /*
+    
     public float moveSpeed;
     private Rigidbody myRigidbody;
 
@@ -43,12 +43,12 @@ public class PlayerController : MonoBehaviour
 
             transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z));
         }
-        /*
-        if (Input.GetMouseButtonDown(0))
-            theGun.isFiring = true; 
+        
+        //if (Input.GetMouseButtonDown(0))
+           // theGun.isFiring = true; 
 
-        if (Input.GetMouseButtonUp(0))
-            theGun.isFiring = false;
+       // if (Input.GetMouseButtonUp(0))
+          //  theGun.isFiring = false;
 
        
     }
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
 
         
 
-    }*/
+    }
 }
 
-    
+    */

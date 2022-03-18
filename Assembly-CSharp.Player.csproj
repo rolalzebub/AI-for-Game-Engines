@@ -67,6 +67,8 @@
     <Compile Include="Assets\Scripts\BulletController.cs" />
     <Compile Include="Assets\Downloads\NavMeshComponents\Scripts\NavMeshModifier.cs" />
     <Compile Include="Assets\Scripts\NavigableObject.cs" />
+    <Compile Include="Assets\Scripts\AstarPath.cs" />
+    <Compile Include="Assets\EnableWaves.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Low Poly Graveyard\Materials\vertexcolorsstandard.shader" />
