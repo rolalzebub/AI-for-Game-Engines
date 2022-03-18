@@ -40,7 +40,7 @@ public class Heightfield
         }
 
 
-        for (int j = 0; j < verts.Count; j += 8)
+        for (int j = 0; j < verts.Count; j += 4)
         {
             Vector3[] voxelVerts = new Vector3[8]
             {
@@ -55,18 +55,20 @@ public class Heightfield
             foreach (var tri in walkableTris)
             {
                 //check for triangle voxel intersection
-                Debug.Log(Intersections.Intersects(tri, voxel));
-
+                bool result =  (Intersections.Intersects(tri, voxel));
+                
                 //HeightfieldVoxel voxelTest = new HeightfieldVoxel(voxelVerts, XZCellSize, YCellSize);
                 //bool result = voxelTest.CheckTriangleIntersection(tri.verts[0], tri.verts[1], tri.verts[2]);
                 //Debug.Log(result);
 
-                //if (result)
-                //{
-                //    var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                //    go.transform.position = voxelTest.bounds.center;
-                //    go.transform.localScale = voxelTest.bounds.size;
-                //}
+                if (result)
+                {
+                    var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    go.transform.position = voxel.Center;
+                    Debug.Log(result);
+                    Debug.Log(voxel.Center);
+                    go.transform.localScale = Vector3.one;
+                }
 
             }
         }
