@@ -18,6 +18,10 @@ public class playerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float gravity;
 
+    [SerializeField] private float jumpHeight;
+
+
+
 
     //Referances
     private CharacterController controller;
@@ -47,7 +51,8 @@ public class playerMovement : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         moveDirection = new Vector3( 0, 0, moveZ);
-        moveDirection *= walkSpeed;
+        moveDirection = transform.TransformDirection(moveDirection);
+
         if (isGrounded)
         {
             if (moveDirection != Vector3.zero && !Input.GetKey(KeyCode.LeftShift))
@@ -69,6 +74,18 @@ public class playerMovement : MonoBehaviour
 
             }
             moveDirection *= moveSpeed;
+
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {                
+                Jump();
+
+                Debug.Log("Jumped");
+
+            }
+            Debug.Log("grounded");
+
+               
         }
         
 
@@ -95,6 +112,12 @@ public class playerMovement : MonoBehaviour
     private void Run()
     {
         moveSpeed = runSpeed;
+
+    }
+
+    private void Jump()
+    {
+        velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
 
     }
 }
