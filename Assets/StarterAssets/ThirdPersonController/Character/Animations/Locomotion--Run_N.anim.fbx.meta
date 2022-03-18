@@ -1,7 +1,11 @@
 fileFormatVersion: 2
 guid: 16114d403eabb53438de032c6f0d1deb
 ModelImporter:
+<<<<<<< HEAD
   serializedVersion: 21100
+=======
+  serializedVersion: 20200
+>>>>>>> parent of d3351566 (new)
   internalIDToNameTable:
   - first:
       74: 6564411413370888346
@@ -19,7 +23,16 @@ ModelImporter:
     optimizeGameObjects: 0
     motionNodeName: 
     rigImportErrors: 
+<<<<<<< HEAD
     rigImportWarnings: 
+=======
+    rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
+      copied configuration does not match position in animation file:\n\t'Left_UpperLeg'
+      : position error = 3.626586 mm\n\t'Left_Foot' : position error = 12.542060
+      mm\n\t'Left_Toes' : position error = 30.265436 mm\n\t'Right_UpperLeg' : position
+      error = 3.626659 mm\n\t'Right_Foot' : position error = 12.543159 mm\n\t'Right_Toes'
+      : position error = 30.260939 mm\n"
+>>>>>>> parent of d3351566 (new)
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
@@ -84,7 +97,11 @@ ModelImporter:
     bakeAxisConversion: 0
     preserveHierarchy: 0
     skinWeightsMode: 0
+<<<<<<< HEAD
     maxBonesPerVertex: 1
+=======
+    maxBonesPerVertex: 4
+>>>>>>> parent of d3351566 (new)
     minBoneWeight: 0.001
     meshOptimizationFlags: -1
     indexFormat: 0
@@ -906,7 +923,12 @@ ModelImporter:
     hasTranslationDoF: 1
     hasExtraRoot: 0
     skeletonHasParents: 1
+<<<<<<< HEAD
   lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 36078ab0369161e49a29d349ae3e0739, type: 3}
+=======
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 36078ab0369161e49a29d349ae3e0739,
+    type: 3}
+>>>>>>> parent of d3351566 (new)
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
