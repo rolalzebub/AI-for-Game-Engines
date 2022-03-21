@@ -5,16 +5,16 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637831901790221771
-    m_Hash: 4005502452
+      ticks: 637834556724552506
+    m_Hash: 410149342
   m_LockFileStatus:
     m_FilePath: C:/Users/Ryanf/Documents/GitHub/AI-for-Game-Engines/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637831901878899091
-    m_Hash: 60769298
+      ticks: 637834556724582869
+    m_Hash: 2297379599
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
 m_LocalPackages:
