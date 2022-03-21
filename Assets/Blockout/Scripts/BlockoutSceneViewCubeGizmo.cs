@@ -92,7 +92,7 @@ namespace RadicalForge.Blockout
 					    x.SetGlobalScale(Vector3.one * 2);
                     }
 				});
-			    var collider = GetComponent<BoxCollider>();
+			    var collider = GetComponent<Collider>();
 
                 Vector3[] boundPoint = new Vector3[8];
 

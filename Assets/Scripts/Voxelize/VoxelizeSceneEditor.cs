@@ -15,4 +15,5 @@ public class VoxelizeSceneEditor : Editor
             (target as VoxelizeScene).VoxelizeSceneByCombiningMeshes();
         }
     }
+    
 }

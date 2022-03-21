@@ -15,4 +15,10 @@ public class AABB
         this.min = Vector3.Min(min, max);
         this.max = Vector3.Max(min, max);
     }
+
+    public AABB(Bounds bounds)
+    {
+        this.min = bounds.min;
+        this.max = bounds.max;
+    }
 }
