@@ -51,20 +51,31 @@ public class VoxelizeScene : MonoBehaviour
             
         for(int xIndex = 0; xIndex < sceneField.gridRows - 1; xIndex++)
         {
-            for(int yIndex = 0; yIndex < sceneField.gridColumns - 1; yIndex++)
+            //for(int yIndex = 0; yIndex < sceneField.gridColumns - 1; yIndex++)
             {
-                for(int zIndex = 0; zIndex < grid[xIndex, yIndex].Count - 1; zIndex++)
+                for(int zIndex = 0; zIndex < sceneField.gridRows - 1; zIndex++)
                 {
-                    if(grid[xIndex, yIndex][zIndex].type == Heightfield.HeightFieldVoxelType.Solid)
+                    foreach(var item in grid[xIndex, zIndex])
                     {
-                        Gizmos.color = Color.red;
+                        foreach (var voxel in item.spanVoxels)
+                        {
+                            if (item.type == Heightfield.HeightFieldVoxelType.Solid)
+                            {
+                                Gizmos.color = Color.red;
+
+                                var cube = voxel.VoxelBounds;
+                                Gizmos.DrawWireCube(cube.Center, cube.Max - cube.Min);
+                            }
+                            else
+                            {
+                                Gizmos.color = Color.green;
+
+                                var cube = voxel.VoxelBounds;
+                                Gizmos.DrawWireCube(cube.Center, cube.Max - cube.Min);
+                            }
+                        }
+                        
                     }
-                    else
-                    {
-                        Gizmos.color = Color.green;
-                    }
-                    var cube = grid[xIndex, yIndex][zIndex].GetSpanBounds();
-                    Gizmos.DrawWireCube(cube.Center, cube.Max - cube.Min);
                 }
             }
         }

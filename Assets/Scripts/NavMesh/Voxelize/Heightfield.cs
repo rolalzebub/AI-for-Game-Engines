@@ -50,44 +50,36 @@ public class Heightfield
         {
             for(int zIndex = 0; zIndex < gridRows - 1; zIndex++)
             {
-                if(HeightFieldSpans[xIndex, zIndex] == null)
-                {
-                    HeightFieldSpans[xIndex, zIndex] = new List<HeightfieldSpan>();
-                }
-                if(HeightFieldSpans[xIndex, zIndex].Count < 1)
-                {
-                    HeightFieldSpans[xIndex, zIndex].Add(new HeightfieldSpan());
-                }
-
+                HeightFieldSpans[xIndex, zIndex] = new List<HeightfieldSpan>();
+                
                 var currentSpanColumn = HeightFieldSpans[xIndex, zIndex];
-                if(currentSpanColumn == null)
-                {
-                    currentSpanColumn = new List<HeightfieldSpan>();
-                }
-
-                if(currentSpanColumn.Count < 1)
-                {
-                    currentSpanColumn.Add(new HeightfieldSpan());
-                }
 
                 for (int yIndex = 0; yIndex < gridColumns - 1; yIndex++)
                 {
-                    //if we're continuing the same span as before
-
-                    if (voxelGrid[xIndex, yIndex, zIndex].type == currentSpanColumn[currentSpanColumn.Count - 1].type)
+                    if (currentSpanColumn.Count < 1)
                     {
-                        currentSpanColumn[currentSpanColumn.Count - 1].spanVoxels.Add(voxelGrid[xIndex, yIndex, zIndex]);
-                    }
-                    //else start a new span
-                    else
-                    {
-                        
+                        //create new span to start a new column
                         var newSpan = new HeightfieldSpan();
+                        newSpan.type = voxelGrid[xIndex, yIndex, zIndex].type;
                         newSpan.spanVoxels.Add(voxelGrid[xIndex, yIndex, zIndex]);
                         currentSpanColumn.Add(newSpan);
-
                     }
-
+                    else
+                    {
+                        //if we're continuing the same span as before
+                        if (voxelGrid[xIndex, yIndex, zIndex].type == currentSpanColumn[currentSpanColumn.Count - 1].type)
+                        {
+                            currentSpanColumn[currentSpanColumn.Count - 1].spanVoxels.Add(voxelGrid[xIndex, yIndex, zIndex]);
+                        }
+                        //else start a new span
+                        else
+                        {
+                            var newSpan = new HeightfieldSpan();
+                            newSpan.type = voxelGrid[xIndex, yIndex, zIndex].type;
+                            newSpan.spanVoxels.Add(voxelGrid[xIndex, yIndex, zIndex]);
+                            currentSpanColumn.Add(newSpan);
+                        }
+                    }
                     HeightFieldSpans[xIndex, zIndex] = currentSpanColumn;
                 }
             }
@@ -96,7 +88,7 @@ public class Heightfield
 
     public void CheckHeightfieldAgainstMesh(Mesh meshToCheck)
     {
-        voxelGrid = new HeightfieldVoxel[gridRows, gridColumns, gridRows];
+        voxelGrid = new HeightfieldVoxel[gridRows - 1, gridColumns - 1, gridRows - 1];
 
         for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
         {
