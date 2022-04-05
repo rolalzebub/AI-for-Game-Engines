@@ -15,6 +15,8 @@ public class VoxelizeScene : MonoBehaviour
 
     bool sceneVoxed = false;
 
+    public DebugHeightSpanDrawMode debugMode;
+
     public void VoxelizeSceneByCombiningMeshes()
     {
         allSceneMeshes = new List<SceneMeshObject>(FindObjectsOfType<SceneMeshObject>());
@@ -30,6 +32,7 @@ public class VoxelizeScene : MonoBehaviour
         sceneMesh.CombineMeshes(meshesToCombine);
 
         sceneField = new Heightfield(XZCellSize, YCellSize, walkableSlopeAngle);
+
         sceneField.CreateHeightFieldGrid(sceneMesh.bounds, walkableSlopeAngle);
         sceneField.CheckHeightfieldAgainstMesh(sceneMesh);
 
@@ -51,36 +54,72 @@ public class VoxelizeScene : MonoBehaviour
             
         for(int xIndex = 0; xIndex < sceneField.gridRows - 1; xIndex++)
         {
-            //for(int yIndex = 0; yIndex < sceneField.gridColumns - 1; yIndex++)
+            for(int zIndex = 0; zIndex < sceneField.gridRows - 1; zIndex++)
             {
-                for(int zIndex = 0; zIndex < sceneField.gridRows - 1; zIndex++)
+
+                foreach(var item in grid[xIndex, zIndex])
                 {
-                    foreach(var item in grid[xIndex, zIndex])
+                    bool drawCube = false;
+                    switch (debugMode)
                     {
-                        foreach (var voxel in item.spanVoxels)
-                        {
-                            if (item.type == Heightfield.HeightFieldVoxelType.Solid)
+                        case DebugHeightSpanDrawMode.Both:
+                            { 
+                                if (item.type == Heightfield.HeightFieldVoxelType.Solid)
+                                {
+                                    Gizmos.color = Color.red;
+                                }
+                                else
+                                {
+                                    Gizmos.color = Color.green;
+                                }
+                                drawCube = true;
+                                break;
+                            }
+                        case DebugHeightSpanDrawMode.ClosedSpans:
                             {
                                 Gizmos.color = Color.red;
-
-                                var cube = voxel.VoxelBounds;
-                                Gizmos.DrawWireCube(cube.Center, cube.Max - cube.Min);
+                                if (item.type == Heightfield.HeightFieldVoxelType.Solid)
+                                {
+                                    drawCube = true;
+                                }
+                                break;
                             }
-                            else
+                        case DebugHeightSpanDrawMode.OpenSpans:
                             {
                                 Gizmos.color = Color.green;
-
-                                var cube = voxel.VoxelBounds;
-                                Gizmos.DrawWireCube(cube.Center, cube.Max - cube.Min);
+                                if (item.type == Heightfield.HeightFieldVoxelType.Open)
+                                {
+                                    drawCube = true;
+                                }
+                                break;
                             }
+                    }
+                    if (drawCube)
+                    {
+                        int cubeVertSize = item.spanVoxels.Count;
+
+                        Vector3 min = item.spanVoxels[0].VoxelBounds.Min, max = Vector3.zero;
+
+                        foreach (var voxel in item.spanVoxels)
+                        {
+                            min = Vector3.Min(min, voxel.VoxelBounds.Min);
+                            max = Vector3.Max(max, voxel.VoxelBounds.Max);
                         }
-                        
+
+                        AABB spanBounds = new AABB(min, max);
+
+                        Gizmos.DrawWireCube(spanBounds.Center, max - min);
                     }
                 }
             }
         }
-       
     }
 
+    public enum DebugHeightSpanDrawMode
+    {
+        ClosedSpans,
+        OpenSpans,
+        Both
+    };
 }
 

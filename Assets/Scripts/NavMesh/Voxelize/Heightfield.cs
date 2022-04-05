@@ -44,7 +44,7 @@ public class Heightfield
 
     void ConvertHeightfieldGridToSpans()
     {
-        HeightFieldSpans = new List<HeightfieldSpan>[gridRows, gridRows];
+        HeightFieldSpans = new List<HeightfieldSpan>[gridRows - 1, gridRows - 1];
 
         for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
         {
