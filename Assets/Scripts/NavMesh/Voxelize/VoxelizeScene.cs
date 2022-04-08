@@ -1,25 +1,24 @@
-using MeshVoxelizerProject;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class VoxelizeScene : MonoBehaviour
 {
     List<SceneMeshObject> allSceneMeshes;
-    public int gridResolution;
     public float XZCellSize;
     public float YCellSize;
-    public float walkableSlopeAngle = 45.0f;
 
     Heightfield sceneField;
 
-    bool sceneVoxed = false;
+    [System.NonSerialized]
+    public bool sceneVoxed = false;
 
     public DebugHeightSpanDrawMode debugMode;
 
     public void VoxelizeSceneByCombiningMeshes()
     {
-        allSceneMeshes = new List<SceneMeshObject>(FindObjectsOfType<SceneMeshObject>());
+        allSceneMeshes = new List<SceneMeshObject>(FindObjectsOfType<SceneMeshObject>().Where(x => x.enabled == true).ToArray());
 
         Mesh sceneMesh = new Mesh();
         CombineInstance[] meshesToCombine = new CombineInstance[allSceneMeshes.Count];
@@ -31,12 +30,17 @@ public class VoxelizeScene : MonoBehaviour
         }
         sceneMesh.CombineMeshes(meshesToCombine);
 
-        sceneField = new Heightfield(XZCellSize, YCellSize, walkableSlopeAngle);
+        sceneField = new Heightfield(XZCellSize, YCellSize);
 
-        sceneField.CreateHeightFieldGrid(sceneMesh.bounds, walkableSlopeAngle);
+        sceneField.CreateHeightFieldGrid(sceneMesh.bounds);
         sceneField.CheckHeightfieldAgainstMesh(sceneMesh);
 
         sceneVoxed = true;
+    }
+
+    public Heightfield GetHeightfield()
+    {
+        return sceneField;
     }
 
     private void OnDrawGizmosSelected()
@@ -64,7 +68,7 @@ public class VoxelizeScene : MonoBehaviour
                     {
                         case DebugHeightSpanDrawMode.Both:
                             { 
-                                if (item.type == Heightfield.HeightFieldVoxelType.Solid)
+                                if (item.type == HeightFieldVoxelType.Closed)
                                 {
                                     Gizmos.color = Color.red;
                                 }
@@ -78,7 +82,7 @@ public class VoxelizeScene : MonoBehaviour
                         case DebugHeightSpanDrawMode.ClosedSpans:
                             {
                                 Gizmos.color = Color.red;
-                                if (item.type == Heightfield.HeightFieldVoxelType.Solid)
+                                if (item.type == HeightFieldVoxelType.Closed)
                                 {
                                     drawCube = true;
                                 }
@@ -87,7 +91,7 @@ public class VoxelizeScene : MonoBehaviour
                         case DebugHeightSpanDrawMode.OpenSpans:
                             {
                                 Gizmos.color = Color.green;
-                                if (item.type == Heightfield.HeightFieldVoxelType.Open)
+                                if (item.type == HeightFieldVoxelType.Open)
                                 {
                                     drawCube = true;
                                 }

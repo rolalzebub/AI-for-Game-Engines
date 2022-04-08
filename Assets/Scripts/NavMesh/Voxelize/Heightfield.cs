@@ -15,7 +15,6 @@ public class Heightfield
 
     public float XZCellSize;
     public float YCellSize;
-    public float maxWalkableSlopeAngle;
 
     public int gridRows;
     public int gridColumns;
@@ -31,13 +30,15 @@ public class Heightfield
 
     HeightfieldVoxel[,,] voxelGrid;
 
-    public Heightfield(float _XZCellSize, float _YCellSize, float _maxWalkableSlopeAngle)
+    SpanGraph heightSpanGraph;
+
+    public Heightfield(float _XZCellSize, float _YCellSize)
     {
         XZCellSize = _XZCellSize;
         YCellSize = _YCellSize;
-        maxWalkableSlopeAngle = _maxWalkableSlopeAngle;
 
         HeightFieldSpans = new List<HeightfieldSpan>[0, 0];
+
     }
 
     #region Heightfield generation Functions
@@ -45,7 +46,7 @@ public class Heightfield
     void ConvertHeightfieldGridToSpans()
     {
         HeightFieldSpans = new List<HeightfieldSpan>[gridRows - 1, gridRows - 1];
-
+        
         for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
         {
             for(int zIndex = 0; zIndex < gridRows - 1; zIndex++)
@@ -59,9 +60,7 @@ public class Heightfield
                     if (currentSpanColumn.Count < 1)
                     {
                         //create new span to start a new column
-                        var newSpan = new HeightfieldSpan();
-                        newSpan.type = voxelGrid[xIndex, yIndex, zIndex].type;
-                        newSpan.spanVoxels.Add(voxelGrid[xIndex, yIndex, zIndex]);
+                        var newSpan = new HeightfieldSpan(voxelGrid[xIndex, yIndex, zIndex]);
                         currentSpanColumn.Add(newSpan);
                     }
                     else
@@ -74,9 +73,7 @@ public class Heightfield
                         //else start a new span
                         else
                         {
-                            var newSpan = new HeightfieldSpan();
-                            newSpan.type = voxelGrid[xIndex, yIndex, zIndex].type;
-                            newSpan.spanVoxels.Add(voxelGrid[xIndex, yIndex, zIndex]);
+                            var newSpan = new HeightfieldSpan(voxelGrid[xIndex, yIndex, zIndex]);
                             currentSpanColumn.Add(newSpan);
                         }
                     }
@@ -96,7 +93,6 @@ public class Heightfield
             {
                 for (int zIndex = 0; zIndex < gridRows - 1; zIndex++)
                 {
-
                     Vector3[] voxelVerts = new Vector3[8]
                     {
                         verts[xIndex, yIndex, zIndex], verts[xIndex, yIndex + 1, zIndex],
@@ -107,7 +103,6 @@ public class Heightfield
 
                     HeightfieldVoxel voxel = new HeightfieldVoxel(voxelVerts, XZCellSize, YCellSize);
 
-
                     for(int i = 0; i < meshToCheck.triangles.Length; i+=3)
                     {
                         Triangle tri = new Triangle(meshToCheck.vertices[meshToCheck.triangles[i]], meshToCheck.vertices[meshToCheck.triangles[i + 1]], meshToCheck.vertices[meshToCheck.triangles[i + 2]]);
@@ -116,7 +111,7 @@ public class Heightfield
                         
                         if (result)
                         {
-                            voxel.type = HeightFieldVoxelType.Solid;
+                            voxel.type = HeightFieldVoxelType.Closed;
                             voxel.intersectingTriangleNormal = tri.Normal;
 
                             voxelGrid[xIndex, yIndex, zIndex] = voxel;
@@ -136,7 +131,7 @@ public class Heightfield
         ConvertHeightfieldGridToSpans();
     }
 
-    public void CreateHeightFieldGrid(Bounds _sceneBounds, float walkableSlopeAngle)
+    public void CreateHeightFieldGrid(Bounds _sceneBounds)
     {
         sceneBounds = _sceneBounds;
 
@@ -188,78 +183,7 @@ public class Heightfield
     }
 
     #endregion
-
-    public class HeightfieldSpan
-    {
-        public HeightFieldVoxelType type;
-
-
-        public List<HeightfieldVoxel> spanVoxels;
-
-        public AABB GetSpanBounds()
-        {
-            Vector3 min = Vector3.one;
-            Vector3 max = Vector3.zero;
-
-            foreach(var voxel in spanVoxels)
-            {
-                min = Vector3.Min(min, voxel.VoxelBounds.Min);
-                max = Vector3.Max(max, voxel.VoxelBounds.Max);
-            }
-
-            return new AABB(min, max);
-        }
-
-        public HeightfieldSpan()
-        {
-            spanVoxels = new List<HeightfieldVoxel>();
-        }
-    }
-
-    public class HeightfieldVoxel
-    {
-        Vector3[] vertices;
-
-        public HeightFieldVoxelType type;
-
-        public AABB VoxelBounds;
-
-        /// <summary>
-        /// Vector3.zero if voxel is open
-        /// </summary>
-        public Vector3 intersectingTriangleNormal;
-
-        public HeightfieldVoxel(Vector3[] _vertices, float XZSize, float YSize)
-        {
-            Bounds bounds = new Bounds();
-            vertices = _vertices;
-
-            bounds.min = bounds.max = vertices[0];
-
-            foreach (var item in vertices)
-            {
-                bounds.min = Vector3.Min(item, bounds.min);
-                bounds.max = Vector3.Max(item, bounds.max);
-            }
-
-            bounds.size = new Vector3()
-            {
-                x = XZSize,
-                y = YSize,
-                z = XZSize
-            };
-
-            VoxelBounds = new AABB(bounds);
-
-            intersectingTriangleNormal = Vector3.zero;
-        }
-    }
-    public enum HeightFieldVoxelType
-    {
-        Solid,
-        Open
-    }
-
+    
     #region Getters for debugging
     public HeightfieldVoxel[,,] GetVoxelGrid()
     {
@@ -271,4 +195,104 @@ public class Heightfield
         return HeightFieldSpans;
     }
     #endregion
+}
+
+public class HeightfieldSpan
+{
+    public HeightFieldVoxelType type;
+
+    public List<HeightfieldVoxel> spanVoxels;
+
+    AABB spanBounds = null;
+
+    public AABB SpanBounds
+    {
+        get
+        {
+            if (spanBounds == null)
+            {
+                CalculateSpanBounds();
+            }
+
+            return spanBounds;
+        }
+    }
+
+    public void CalculateSpanBounds()
+    {
+        Vector3 min = Vector3.one;
+        Vector3 max = Vector3.zero;
+
+        foreach (var voxel in spanVoxels)
+        {
+            min = Vector3.Min(min, voxel.VoxelBounds.Min);
+            max = Vector3.Max(max, voxel.VoxelBounds.Max);
+        }
+
+        spanBounds = new AABB(min, max);
+    }
+
+    public HeightfieldSpan(HeightfieldVoxel startingVoxel)
+    {
+        spanVoxels = new List<HeightfieldVoxel>();
+        spanVoxels.Add(startingVoxel);
+        type = startingVoxel.type;
+    }
+
+    public float GetSpanHeight()
+    {
+        if (spanBounds == null)
+        {
+            CalculateSpanBounds();
+        }
+
+        return spanBounds.Max.y - spanBounds.Min.y;
+    }
+
+    public float GetSpanStartHeight()
+    {
+        if (spanBounds == null)
+        {
+            CalculateSpanBounds();
+        }
+
+        return spanBounds.Min.y;
+    }
+}
+
+public class HeightfieldVoxel
+{
+    Vector3[] vertices;
+
+    public HeightFieldVoxelType type;
+
+    public AABB VoxelBounds;
+
+    /// <summary>
+    /// Vector3.zero if voxel is open
+    /// </summary>
+    public Vector3 intersectingTriangleNormal;
+
+    public HeightfieldVoxel(Vector3[] _vertices, float XZSize, float YSize)
+    {
+        Bounds bounds = new Bounds();
+        vertices = _vertices;
+
+        bounds.min = bounds.max = vertices[0];
+
+        foreach (var item in vertices)
+        {
+            bounds.min = Vector3.Min(item, bounds.min);
+            bounds.max = Vector3.Max(item, bounds.max);
+        }
+
+        VoxelBounds = new AABB(bounds);
+
+        intersectingTriangleNormal = Vector3.zero;
+    }
+}
+public enum HeightFieldVoxelType
+{
+    Closed,
+    Open
 }

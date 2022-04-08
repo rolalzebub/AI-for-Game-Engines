@@ -7,7 +7,6 @@ using System.ComponentModel;
 [CustomEditor(typeof(VoxelizeScene))]
 public class VoxelizeSceneEditor : Editor
 {
-    BackgroundWorker bg;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
