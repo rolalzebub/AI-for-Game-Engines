@@ -272,42 +272,32 @@ public class HeightfieldSpan
         return SpanBounds.Min.y;
     }
 
-    public Vector3[] GetSpanFloor()
+    public HQuad GetSpanFloor()
     {
-        Vector3[] toReturn = new Vector3[4];
+        HQuad toReturn = new HQuad();
 
-        Vector3 bottomLeft = SpanBounds.Min;
-        Vector3 topLeft = new Vector3(SpanBounds.Min.x, SpanBounds.Min.y, SpanBounds.Max.z);
-        Vector3 bottomRight = new Vector3(SpanBounds.Max.x, SpanBounds.Min.y, SpanBounds.Min.z);
-        Vector3 topRight = new Vector3(SpanBounds.Max.x, SpanBounds.Min.y, SpanBounds.Max.z);
-
-        toReturn[0] = bottomLeft;
-        toReturn[1] = topLeft;
-        toReturn[2] = topRight;
-        toReturn[3] = bottomRight;
+        toReturn.bottomLeft = SpanBounds.Min;
+        toReturn.topLeft = new Vector3(SpanBounds.Min.x, SpanBounds.Min.y, SpanBounds.Max.z);
+        toReturn.bottomRight = new Vector3(SpanBounds.Max.x, SpanBounds.Min.y, SpanBounds.Min.z);
+        toReturn.topRight = new Vector3(SpanBounds.Max.x, SpanBounds.Min.y, SpanBounds.Max.z);
 
         return toReturn;
     }
 
-    public Vector3[] GetSpanCeiling()
+    public HQuad GetSpanCeiling()
     {
-        Vector3[] toReturn = new Vector3[4];
+        HQuad toReturn = new HQuad();
 
-        Vector3 bottomLeft = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Min;
-        bottomLeft.y = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Max.y;
+        toReturn.bottomLeft = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Min;
+        toReturn.bottomLeft.y = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Max.y;
 
-        Vector3 topLeft = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Max;
-        topLeft.x = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Min.x;
+        toReturn.topLeft = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Max;
+        toReturn.topLeft.x = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Min.x;
 
-        Vector3 topRight = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Max;
+        toReturn.topRight = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Max;
 
-        Vector3 bottomRight = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Max;
-        bottomRight.z = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Min.z;
-
-        toReturn[0] = bottomLeft;
-        toReturn[1] = topLeft;
-        toReturn[2] = topRight;
-        toReturn[3] = bottomRight;
+        toReturn.bottomRight = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Max;
+        toReturn.bottomRight.z = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Min.z;
 
         return toReturn;
     }
@@ -360,4 +350,9 @@ public enum HeightFieldVoxelType
 {
     Closed,
     Open
+}
+
+public struct HQuad
+{
+    public Vector3 bottomLeft, topLeft, topRight, bottomRight;
 }

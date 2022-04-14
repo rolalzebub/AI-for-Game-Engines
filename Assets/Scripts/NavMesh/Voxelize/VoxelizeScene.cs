@@ -130,7 +130,7 @@ public class VoxelizeScene : MonoBehaviour
                         }
 
                         AABB spanBounds = new AABB(min, max);
-                        Gizmos.DrawCube(spanBounds.Center, max - min);
+                        Gizmos.DrawWireCube(spanBounds.Center, max - min);
                     }
                 }
             }

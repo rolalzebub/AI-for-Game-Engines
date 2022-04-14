@@ -14,7 +14,6 @@ public class RegionAnalyzer: MonoBehaviour
     public float maxStepDistance;
     public float agentHeight;
     public float agentRadius;
-    public float maxSlopeAngle;
     
     [System.NonSerialized]
     public bool graphCreated = false;
@@ -26,6 +25,12 @@ public class RegionAnalyzer: MonoBehaviour
             graph = null;
         }
 
+        AgentSettings settings = new AgentSettings();
+        settings.maxTraversableHeight = maxTraversableHeight;
+        settings.maxStepDistance = maxStepDistance;
+        settings.agentHeight = agentHeight;
+        settings.agentRadius = agentRadius;
+        
         var heightSpans = heightfield.GetHeightSpans();
 
         for(int i = 0; i < heightfield.gridRows - 1; i++)
@@ -54,24 +59,18 @@ public class RegionAnalyzer: MonoBehaviour
                         {
                             if(heightSpans[i,j][k+1].type == HeightFieldVoxelType.Open)
                             {
-                                //if (heightSpans[i, j][k + 1].ContainsWalkableVoxels())
+                                if (heightSpans[i, j][k + 1].GetSpanHeight() >= agentHeight)
                                 {
-                                    if (heightSpans[i, j][k + 1].GetSpanHeight() >= agentHeight)
-                                    {
-                                        currentNode.isWalkable = true;
-                                    }
+                                    currentNode.isWalkable = true;
                                 }
                             }
                         }
                     }
-                    //mark span as walkable (for now) if the opening is tall enough for the player to step onto it, and it is an open span
-                    //exception for if the span is the last vertical open span, then it is assumed there is no roof or there would be a closed span above it
-                    //currentNode.isWalkable = (currentSpan.type == HeightFieldVoxelType.Open) && ((currentSpan.GetSpanHeight() >= agentHeight) || k == heightSpans[i, j].Count - 1);
 
                     //initialize graph
                     if (graph == null)
                     {
-                        graph = new SpanGraph(currentNode);
+                        graph = new SpanGraph(currentNode, settings);
                     }
                     else
                     {
@@ -81,7 +80,7 @@ public class RegionAnalyzer: MonoBehaviour
             }
         }
 
-        //graph.MakeAllNeighbourConnections();
+        graph.MakeAllNeighbourConnections();
     }
 
 
@@ -104,205 +103,24 @@ public class RegionAnalyzer: MonoBehaviour
                         var spanCeiling = currentNode.span.GetSpanCeiling();
 
                         Gizmos.color = Color.green;
-                        Gizmos.DrawLine(spanCeiling[0], spanCeiling[1]);
-                        Gizmos.DrawLine(spanCeiling[1], spanCeiling[2]);
-                        Gizmos.DrawLine(spanCeiling[2], spanCeiling[3]);
-                        Gizmos.DrawLine(spanCeiling[3], spanCeiling[0]);
+                        Gizmos.DrawLine(spanCeiling.bottomLeft, spanCeiling.topLeft);
+                        Gizmos.DrawLine(spanCeiling.topLeft, spanCeiling.topRight);
+                        Gizmos.DrawLine(spanCeiling.topRight, spanCeiling.bottomRight);
+                        Gizmos.DrawLine(spanCeiling.bottomRight, spanCeiling.bottomLeft);
+
+                        var currentSpanCentre = currentNode.span.GetSpanCeiling().topRight - currentNode.span.GetSpanCeiling().bottomLeft;
+                        currentSpanCentre = currentNode.span.GetSpanCeiling().topRight - (currentSpanCentre/2);
+                        foreach (var nbr in currentNode.NeighbourNodes)
+                        {
+                            Gizmos.color = Color.grey;
+                            var nbrCentre = nbr.span.GetSpanCeiling().topRight - nbr.span.GetSpanCeiling().bottomLeft;
+                            nbrCentre = nbr.span.GetSpanCeiling().topRight - (nbrCentre/2);
+                            Gizmos.DrawSphere(currentSpanCentre, 0.2f);
+                            Gizmos.DrawLine(currentSpanCentre, nbrCentre);
+                        }
                     }
                 }
             }
         }
     }
-}
-
-
-
-public class SpanGraph
-{
-    public SpanGraphNode rootNode;
-
-
-    //xz-y ordered list of spans
-    public List<List<List<SpanGraphNode>>> allNodes;
-
-    public SpanGraph(HeightfieldSpan rootSpan)
-    {
-        rootNode = new SpanGraphNode(rootSpan);
-
-        allNodes = new List<List<List<SpanGraphNode>>>();
-        allNodes.Add(new List<List<SpanGraphNode>>());
-        allNodes[0].Add(new List<SpanGraphNode>());
-        allNodes[0][0].Add(rootNode);
-    }
-
-    public SpanGraph(SpanGraphNode _rootNode)
-    {
-        rootNode = _rootNode;
-
-        allNodes = new List<List<List<SpanGraphNode>>>();
-        allNodes.Add(new List<List<SpanGraphNode>>());
-        allNodes[0].Add(new List<SpanGraphNode>());
-        allNodes[0][0].Add(rootNode);
-    }
-
-    public void MakeAllNeighbourConnections()
-    {
-        for(int i = 0; i < allNodes.Count; i++)
-        {
-            for(int j = 0; j < allNodes[i].Count; j++)
-            {
-                for(int k = 0; k < allNodes[i][j].Count; k++)
-                {
-                    var currentNode = allNodes[i][j][k];
-
-                    if(!currentNode.isWalkable)
-                    {
-                        continue;
-                    }
-
-                    ConnectToNeighbours(currentNode, i, j, k);
-                }
-            }
-        }
-    }
-
-    void ConnectToNeighbours(SpanGraphNode node, int xIndex, int zIndex, int yIndex)
-    {
-        //check the left
-        if (xIndex != 0)
-        {
-            var leftNode = allNodes[xIndex - 1][zIndex] [yIndex];
-
-            if(leftNode.isWalkable)
-            {
-                if(!node.NeighbourNodes.Contains(leftNode))
-                {
-                    node.NeighbourNodes.Add(leftNode);
-                }
-                if (!leftNode.NeighbourNodes.Contains(node))
-                {
-                    leftNode.NeighbourNodes.Add(node);
-                    allNodes[xIndex - 1][zIndex][yIndex] = leftNode;
-                }
-            }
-        }
-
-        //check the right
-        if(xIndex < allNodes.Count - 1)
-        {
-            var rightNode = allNodes[xIndex + 1][zIndex][yIndex];
-
-            if (rightNode.isWalkable)
-            {
-                if (!node.NeighbourNodes.Contains(rightNode))
-                {
-                    node.NeighbourNodes.Add(rightNode);
-                }
-                if (!rightNode.NeighbourNodes.Contains(node))
-                {
-                    rightNode.NeighbourNodes.Add(node);
-                    allNodes[xIndex + 1][zIndex][yIndex] = rightNode;
-                }
-            }
-        }
-
-        //check the front
-        if(zIndex < allNodes[xIndex].Count - 1)
-        {
-            var frontNode = allNodes[xIndex][zIndex + 1][yIndex];
-
-            if (frontNode.isWalkable)
-            {
-                if (!node.NeighbourNodes.Contains(frontNode))
-                {
-                    node.NeighbourNodes.Add(frontNode);
-                }
-                if (!frontNode.NeighbourNodes.Contains(node))
-                {
-                    frontNode.NeighbourNodes.Add(node);
-                    allNodes[xIndex][zIndex + 1][yIndex] = frontNode;
-                }
-            }
-
-        }
-
-        //check the back
-
-        if(zIndex != 0)
-        {
-            var backNode = allNodes[xIndex][zIndex - 1][yIndex];
-
-            if (backNode.isWalkable)
-            {
-                if (!node.NeighbourNodes.Contains(backNode))
-                {
-                    node.NeighbourNodes.Add(backNode);
-                }
-                if (!backNode.NeighbourNodes.Contains(node))
-                {
-                    backNode.NeighbourNodes.Add(node);
-                    allNodes[xIndex][zIndex - 1][yIndex] = backNode;
-                }
-            }
-        }
-    }
-
-    public class SpanGraphNode
-    {
-        public bool isWalkable;
-
-        public HeightfieldSpan span;
-
-        public List<SpanGraphNode> NeighbourNodes;
-
-        public SpanGraphNode(HeightfieldSpan _span)
-        {
-            span = _span;
-            NeighbourNodes = new List<SpanGraphNode>();
-        }
-
-        public void AddNeighbour(SpanGraphNode newNeighbour)
-        {
-            if (NeighbourNodes == null)
-            {
-                NeighbourNodes = new List<SpanGraphNode>();
-            }
-
-            NeighbourNodes.Add(newNeighbour);
-        }
-
-        public bool IsConnectedTo(HeightfieldSpan nb)
-        {
-            foreach (var node in NeighbourNodes)
-            {
-                if (node.span == nb)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// returns a vector3 that is the middle of the floorspace covered by this span
-        /// </summary>
-        /// <returns></returns>
-        public Vector3 GetSpanFloor()
-        {
-            var spanFloor = span.GetSpanFloor();
-
-
-            Vector3 nodePosition = spanFloor[3] - spanFloor[0];
-
-            return nodePosition;
-        }
-    }
-
-    public struct SpanGraphNodeQuad
-    {
-        public Vector3 bottomLeft, topLeft, topRight, bottomRight;
-        public Vector3 quadNormal;
-    }
-
 }

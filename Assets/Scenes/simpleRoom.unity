@@ -607,7 +607,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 404007006}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 3.96, y: 1, z: 0.25}
+  m_LocalPosition: {x: 3.96, y: 0.42, z: 0.25}
   m_LocalScale: {x: 5, y: 5, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1552,7 +1552,6 @@ MonoBehaviour:
   maxStepDistance: 2
   agentHeight: 2
   agentRadius: 1
-  maxSlopeAngle: 45
 --- !u!114 &1512783219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1565,8 +1564,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a9b46454ac55a4280669f427d0018d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XZCellSize: 0.5
-  YCellSize: 0.75
+  XZCellSize: 1
+  YCellSize: 0.76
   debugMode: 0
   maxWalkableSlope: 45
 --- !u!1 &1599941285
