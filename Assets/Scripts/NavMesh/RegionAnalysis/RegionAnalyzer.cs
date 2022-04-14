@@ -21,32 +21,52 @@ public class RegionAnalyzer: MonoBehaviour
 
     public void CreateSpanGraphFromHeightfield(Heightfield heightfield)
     {
-        var spanMap = heightfield.GetHeightSpans();
+        if(graph != null)
+        {
+            graph = null;
+        }
+
+        var heightSpans = heightfield.GetHeightSpans();
 
         for(int i = 0; i < heightfield.gridRows - 1; i++)
         {
             if (graph != null)
             {
-                graph.allNodes.Add(new List<List<SpanGraphNode>>());
+                graph.allNodes.Add(new List<List<SpanGraph.SpanGraphNode>>());
             }
 
             for(int j = 0; j < heightfield.gridRows - 1; j++)
             {
                 if (graph != null)
                 {
-                    graph.allNodes[i].Add(new List<SpanGraphNode>());
+                    graph.allNodes[i].Add(new List<SpanGraph.SpanGraphNode>());
                 }
 
-                for (int k = 0; k < spanMap[i,j].Count; k++)
+                for (int k = 0; k < heightSpans[i,j].Count; k++)
                 {
+                    var currentSpan = heightSpans[i, j][k];
 
-                    var currentSpan = spanMap[i, j][k];
-
-                    SpanGraphNode currentNode = new SpanGraphNode(currentSpan);
-                    
+                    SpanGraph.SpanGraphNode currentNode = new SpanGraph.SpanGraphNode(currentSpan);
+                    if(currentSpan.type == HeightFieldVoxelType.Closed)
+                    {
+                        //check the span above it
+                        if(k < heightSpans[i,j].Count - 1)
+                        {
+                            if(heightSpans[i,j][k+1].type == HeightFieldVoxelType.Open)
+                            {
+                                //if (heightSpans[i, j][k + 1].ContainsWalkableVoxels())
+                                {
+                                    if (heightSpans[i, j][k + 1].GetSpanHeight() >= agentHeight)
+                                    {
+                                        currentNode.isWalkable = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     //mark span as walkable (for now) if the opening is tall enough for the player to step onto it, and it is an open span
                     //exception for if the span is the last vertical open span, then it is assumed there is no roof or there would be a closed span above it
-                    currentNode.isWalkable = (currentSpan.type == HeightFieldVoxelType.Open) && ((currentSpan.GetSpanHeight() >= agentHeight) || k == spanMap[i, j].Count - 1);
+                    //currentNode.isWalkable = (currentSpan.type == HeightFieldVoxelType.Open) && ((currentSpan.GetSpanHeight() >= agentHeight) || k == heightSpans[i, j].Count - 1);
 
                     //initialize graph
                     if (graph == null)
@@ -60,87 +80,13 @@ public class RegionAnalyzer: MonoBehaviour
                 }
             }
         }
+
+        //graph.MakeAllNeighbourConnections();
     }
 
-    List<HeightfieldSpan> FindSpanNeighbours(List<HeightfieldSpan>[,] field, int X_spanIndex, int Z_SpanIndex, int Y_SpanIndex)
-    {
-        List<HeightfieldSpan> neighboursFound = new List<HeightfieldSpan>();
-
-        HeightfieldSpan spanToCheck = field[X_spanIndex, Z_SpanIndex][Y_SpanIndex];
-
-        //check the straight left
-        if(X_spanIndex != 0)
-        {
-            var leftSpans = field[X_spanIndex - 1, Z_SpanIndex];
-
-            //check all spans in the neighbouring column
-            foreach(var item in leftSpans)
-            {
-                if(item.type == spanToCheck.type)
-                {
-                    //if((item.SpanBounds.Max - spanToCheck.SpanBounds.Min).magnitude < maxStepDistance)
-                    {
-                        neighboursFound.Add(item);
-                    }
-                }
-            }
-        }
-
-        //check straight right
-        if(X_spanIndex < field.GetLength(0) - 1)
-        {
-            var rightSpans = field[X_spanIndex + 1, Z_SpanIndex];
-            
-            foreach (var item in rightSpans)
-            {
-                if (item.type == spanToCheck.type)
-                {
-                    //if((item.SpanBounds.Max - spanToCheck.SpanBounds.Min).magnitude < maxStepDistance)
-                    {
-                        neighboursFound.Add(item);
-                    }
-                }
-            }
-        }
-
-        //check back
-        if(Z_SpanIndex != 0)
-        {
-            var backSpans = field[X_spanIndex, Z_SpanIndex - 1];
-            
-            foreach (var item in backSpans)
-            {
-                if (item.type == spanToCheck.type)
-                {
-                    //if((item.SpanBounds.Max - spanToCheck.SpanBounds.Min).magnitude < maxStepDistance)
-                    {
-                        neighboursFound.Add(item);
-                    }
-                }
-            }
-        }
-
-        //check front
-        if(Z_SpanIndex < field.GetLength(0) - 1)
-        {
-            var frontSpans = field[X_spanIndex, Z_SpanIndex + 1];
-
-            foreach (var item in frontSpans)
-            {
-                if (item.type == spanToCheck.type)
-                {
-                    //if((item.SpanBounds.Max - spanToCheck.SpanBounds.Min).magnitude < maxStepDistance)
-                    {
-                        neighboursFound.Add(item);
-                    }
-                }
-            }
-        }
-
-        return neighboursFound;
-    }
 
     private void OnDrawGizmosSelected()
+
     {
         if (!graphCreated)
             return;
@@ -155,102 +101,26 @@ public class RegionAnalyzer: MonoBehaviour
 
                     if (currentNode.isWalkable)
                     {
+                        var spanCeiling = currentNode.span.GetSpanCeiling();
+
                         Gizmos.color = Color.green;
+                        Gizmos.DrawLine(spanCeiling[0], spanCeiling[1]);
+                        Gizmos.DrawLine(spanCeiling[1], spanCeiling[2]);
+                        Gizmos.DrawLine(spanCeiling[2], spanCeiling[3]);
+                        Gizmos.DrawLine(spanCeiling[3], spanCeiling[0]);
                     }
-                    else
-                    {
-                        Gizmos.color = Color.red;
-                    }                    
-
-
-                    int cubeVertSize = currentNode.span.spanVoxels.Count;
-
-                    Vector3 min = currentNode.span.spanVoxels[0].VoxelBounds.Min, max = Vector3.zero;
-
-                    foreach (var voxel in currentNode.span.spanVoxels)
-                    {
-                        min = Vector3.Min(min, voxel.VoxelBounds.Min);
-                        max = Vector3.Max(max, voxel.VoxelBounds.Max);
-                    }
-
-                    AABB bounds = new AABB(min, max);
-
-                    Vector3 nodePosition = bounds.Center;
-                    nodePosition.y = bounds.Min.y;
-
-                    Gizmos.DrawWireSphere(nodePosition, 0.1f);
                 }
             }
         }
     }
-
-    private void DrawAllNeighbourGizmos(SpanGraphNode neighbour)
-    {
-        while(neighbour.NeighbourNodes != null)
-        {
-            for (int i = neighbour.NeighbourNodes.Count - 1; i >= 0; i--)
-            {
-                var item = neighbour.NeighbourNodes[i];
-                DrawLineToPreviousNode(item, neighbour);
-                DrawAllNeighbourGizmos(item);
-            }
-        }
-
-        DrawSelfGizmo(neighbour);
-    }
-
-    private void DrawLineToPreviousNode(SpanGraphNode item, SpanGraphNode previous)
-    {
-        Gizmos.DrawLine(previous.span.SpanBounds.Center, item.span.SpanBounds.Center);
-    }
-
-    private void DrawSelfGizmo(SpanGraphNode nodeToDraw)
-    {
-        Gizmos.DrawWireSphere(nodeToDraw.span.SpanBounds.Center, 0.2f);
-    }
 }
 
-public class SpanGraphNode
-{
-    public bool isWalkable;
 
-    public HeightfieldSpan span;
-
-    public List<SpanGraphNode> NeighbourNodes;
-
-    public SpanGraphNode(HeightfieldSpan _span)
-    {
-        span = _span;
-        NeighbourNodes = new List<SpanGraphNode>();
-    }
-
-    public void AddNeighbour(SpanGraphNode newNeighbour)
-    {
-        if(NeighbourNodes == null)
-        {
-            NeighbourNodes = new List<SpanGraphNode>();
-        }
-
-        NeighbourNodes.Add(newNeighbour);
-    }
-
-    public bool IsConnectedTo(HeightfieldSpan nb)
-    {
-        foreach(var node in NeighbourNodes)
-        {
-            if(node.span == nb)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-}
 
 public class SpanGraph
 {
     public SpanGraphNode rootNode;
+
 
     //xz-y ordered list of spans
     public List<List<List<SpanGraphNode>>> allNodes;
@@ -375,6 +245,64 @@ public class SpanGraph
                 }
             }
         }
+    }
+
+    public class SpanGraphNode
+    {
+        public bool isWalkable;
+
+        public HeightfieldSpan span;
+
+        public List<SpanGraphNode> NeighbourNodes;
+
+        public SpanGraphNode(HeightfieldSpan _span)
+        {
+            span = _span;
+            NeighbourNodes = new List<SpanGraphNode>();
+        }
+
+        public void AddNeighbour(SpanGraphNode newNeighbour)
+        {
+            if (NeighbourNodes == null)
+            {
+                NeighbourNodes = new List<SpanGraphNode>();
+            }
+
+            NeighbourNodes.Add(newNeighbour);
+        }
+
+        public bool IsConnectedTo(HeightfieldSpan nb)
+        {
+            foreach (var node in NeighbourNodes)
+            {
+                if (node.span == nb)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// returns a vector3 that is the middle of the floorspace covered by this span
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 GetSpanFloor()
+        {
+            var spanFloor = span.GetSpanFloor();
+
+
+            Vector3 nodePosition = spanFloor[3] - spanFloor[0];
+
+            return nodePosition;
+        }
+    }
+
+    public struct SpanGraphNodeQuad
+    {
+        public Vector3 bottomLeft, topLeft, topRight, bottomRight;
+        public Vector3 quadNormal;
     }
 
 }

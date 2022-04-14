@@ -15,6 +15,25 @@ public class VoxelizeScene : MonoBehaviour
     public bool sceneVoxed = false;
 
     public DebugHeightSpanDrawMode debugMode;
+    public float maxWalkableSlope = 45f;
+
+    private Triangle[] GetWalkableTriangles(Mesh combinedSceneMesh)
+    {
+        List<Triangle> walkableTriangles = new List<Triangle>();
+        var trianglesToCheck = combinedSceneMesh.triangles;
+        var vertices = combinedSceneMesh.vertices;
+
+        for (int i = 0; i < trianglesToCheck.Length; i+=3)
+        {
+            Triangle tri = new Triangle(vertices[trianglesToCheck[i]], vertices[trianglesToCheck[i + 1]], vertices[trianglesToCheck[i + 2]]);
+            if(Vector3.Angle(Vector3.up, tri.Normal) <= maxWalkableSlope && Vector3.Angle(Vector3.up, tri.Normal) >= -maxWalkableSlope)
+            {
+                walkableTriangles.Add(tri);
+            }
+        }
+
+        return walkableTriangles.ToArray();
+    }
 
     public void VoxelizeSceneByCombiningMeshes()
     {
@@ -33,8 +52,8 @@ public class VoxelizeScene : MonoBehaviour
         sceneField = new Heightfield(XZCellSize, YCellSize);
 
         sceneField.CreateHeightFieldGrid(sceneMesh.bounds);
-        sceneField.CheckHeightfieldAgainstMesh(sceneMesh);
-
+        sceneField.CheckHeightfieldAgainstTriangles(GetWalkableTriangles(sceneMesh), sceneMesh);
+        sceneField.ConvertHeightfieldGridToSpans(sceneMesh);
         sceneVoxed = true;
     }
 
@@ -100,19 +119,18 @@ public class VoxelizeScene : MonoBehaviour
                     }
                     if (drawCube)
                     {
-                        int cubeVertSize = item.spanVoxels.Count;
+                        var spanVoxels = item.GetSpanVoxels();
 
-                        Vector3 min = item.spanVoxels[0].VoxelBounds.Min, max = Vector3.zero;
+                        Vector3 min = spanVoxels[0].VoxelBounds.Min, max = Vector3.zero;
 
-                        foreach (var voxel in item.spanVoxels)
+                        foreach (var voxel in spanVoxels)
                         {
                             min = Vector3.Min(min, voxel.VoxelBounds.Min);
                             max = Vector3.Max(max, voxel.VoxelBounds.Max);
                         }
 
                         AABB spanBounds = new AABB(min, max);
-
-                        Gizmos.DrawWireCube(spanBounds.Center, max - min);
+                        Gizmos.DrawCube(spanBounds.Center, max - min);
                     }
                 }
             }
