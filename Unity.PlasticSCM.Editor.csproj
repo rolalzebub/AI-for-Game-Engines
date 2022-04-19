@@ -219,8 +219,8 @@
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\UI\UIElements\ProgressControlsForDialogs.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\UI\Progress\DrawProgressForMigration.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\UI\DrawSearchField.cs" />
-    <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Views\Diff\DiffPanel.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Views\Welcome\DownloadAndInstallOperation.cs" />
+    <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Views\Diff\DiffPanel.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Views\IncomingChanges\Developer\DirectoryConflicts\ConflictResolutionState.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Gluon\ProgressOperationHandler.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\WebApi\TokenExchangeResponse.cs" />
@@ -271,8 +271,8 @@
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Views\CreateWorkspace\DrawCreateWorkspaceView.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Views\Changesets\ChangesetsListHeaderState.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\DrawGuiModeSwitcher.cs" />
-    <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Gluon\UpdateReport\UpdateReportListView.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\CheckWorkspaceTreeNodeStatus.cs" />
+    <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Gluon\UpdateReport\UpdateReportListView.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\Tool\LaunchTool.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\AssetsUtils\Processor\AssetsProcessor.cs" />
     <Compile Include="Library\PackageCache\com.unity.collab-proxy@1.15.12\Editor\PlasticSCM\ViewSwitcher.cs" />
