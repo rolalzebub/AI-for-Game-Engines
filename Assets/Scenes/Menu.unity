@@ -1142,7 +1142,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Dungeon
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &786708623
@@ -1183,6 +1183,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 786708620}
   m_CullTransparentMesh: 1
+--- !u!1 &839123092 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4096199071937688111, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+  m_PrefabInstance: {fileID: 1052243648}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &839123093 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4096199071937688104, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+  m_PrefabInstance: {fileID: 1052243648}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 839123092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5b29c1a8d6665a4ebe8c4b2516d6208, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &851061311
 GameObject:
   m_ObjectHideFlags: 0
@@ -1196,7 +1212,7 @@ GameObject:
   - component: {fileID: 851061312}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1399,6 +1415,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1002152082}
   m_CullTransparentMesh: 1
+--- !u!1001 &1052243648
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688105, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4096199071937688111, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
+      propertyPath: m_Name
+      value: LevelManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e2bef7ffa24a3a345b3b71c611e58b3d, type: 3}
 --- !u!1 &1109556525
 GameObject:
   m_ObjectHideFlags: 0
@@ -1725,6 +1798,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb802bf24f31c674ab121a7ef69cd445, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Manager: {fileID: 839123092}
+  LevelManager: {fileID: 839123093}
 --- !u!1 &1435583219
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ public class SceneChanger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name == "Player")
+        if (other.tag == "Player")
         {
             LevelManager.instance.LoadScene(SceneName);
         }
