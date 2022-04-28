@@ -40,7 +40,7 @@ public class Flock : MonoBehaviour
         squaredNeighbourRadius = neighbourRadius * neighbourRadius;
         squaredAvoidanceRadius = squaredNeighbourRadius * avoidanceRadiusMultiplier * avoidanceRadiusMultiplier;
 
-        SpawnFlock();
+        //SpawnFlock();
     }
 
     // Update is called once per frame

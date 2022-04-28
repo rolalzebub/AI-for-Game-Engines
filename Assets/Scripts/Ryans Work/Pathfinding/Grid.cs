@@ -87,8 +87,10 @@ public class Grid<TGridObject>
     }
     public void GetXZ(Vector3 WorldPosition, out int X, out int Z)
     {
-        X = Mathf.FloorToInt((WorldPosition - OriginPosition).x / CellSize);
-        Z = Mathf.FloorToInt((WorldPosition - OriginPosition).z / CellSize);
+        //X = Mathf.FloorToInt((WorldPosition - OriginPosition).x / CellSize);
+        X = Mathf.RoundToInt(Mathf.Abs(WorldPosition.x - OriginPosition.x / CellSize));
+        Z = Mathf.RoundToInt(Mathf.Abs(WorldPosition.z - OriginPosition.z / CellSize));
+        //Z = Mathf.FloorToInt((WorldPosition - OriginPosition).z / CellSize);
     }
 
     private void SetValue(int X, int Z, TGridObject Value)

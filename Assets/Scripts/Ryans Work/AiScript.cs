@@ -18,11 +18,14 @@ public class AiScript : MonoBehaviour
     public bool CanSeePlayer;
     public bool CanMove = true;
 
+
+    public BoxCollider roomForPathfinding;
+
     private void Start()
     {
         // Makes Grid taking in X, Z, CellSize, displacement
         //BossRoom = new Pathfinding(10, 16, 1, new Vector3(-13, 0, -12));
-        MainRoom = new Pathfinding(12, 12, 1, new Vector3(-11, 0, 12));
+        MainRoom = new Pathfinding(Mathf.RoundToInt(roomForPathfinding.size.x), Mathf.RoundToInt(roomForPathfinding.size.z), 1, roomForPathfinding.gameObject.transform.position);
         Player = GameObject.Find("Player");
     }
 
