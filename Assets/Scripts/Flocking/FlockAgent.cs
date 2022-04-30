@@ -7,6 +7,8 @@ using UnityEngine;
 public class FlockAgent : MonoBehaviour
 {
     Collider agentCollider;
+    public Vector3 currentVelocity;
+
     public Collider AgentCollider
     {
         get
@@ -24,7 +26,8 @@ public class FlockAgent : MonoBehaviour
 
     public void Move(Vector3 velocity)
     {
-        transform.forward = velocity;
-        transform.position += velocity * Time.deltaTime;
+        currentVelocity += velocity;
+        transform.forward = currentVelocity.normalized;
+        transform.position += transform.forward * Time.deltaTime;
     }
 }

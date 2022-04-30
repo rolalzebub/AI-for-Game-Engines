@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Flock/Behaviour/Cohesion")]
 public class CohesionBehaviour : FlockBehaviour
 {
-    public override Vector3 CalculateMove(FlockAgent agent, List<Transform> context, Flock flock)
+    public override Vector3 CalculateMove(FlockAgent agent, List<Transform> context)
     {
         Vector3 cohesionMove = Vector3.zero;
         //if no neighbours, maintain course

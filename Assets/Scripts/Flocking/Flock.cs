@@ -39,7 +39,7 @@ public class Flock : MonoBehaviour
         squaredMaxSpeed = maxSpeed * maxSpeed;
         squaredNeighbourRadius = neighbourRadius * neighbourRadius;
         squaredAvoidanceRadius = squaredNeighbourRadius * avoidanceRadiusMultiplier * avoidanceRadiusMultiplier;
-
+        agents = new List<FlockAgent>(FindObjectsOfType<FlockAgent>());
         //SpawnFlock();
     }
 
@@ -51,7 +51,7 @@ public class Flock : MonoBehaviour
             List<Transform> context = GetNearbyObjects(agent);
             
             
-            Vector3 move = behaviour.CalculateMove(agent, context, this);
+            Vector3 move = behaviour.CalculateMove(agent, context);
 
             move *= driveFactor;
 

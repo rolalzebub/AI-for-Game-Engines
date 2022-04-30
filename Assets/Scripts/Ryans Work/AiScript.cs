@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+[RequireComponent(typeof(FlockAgent))]
 public class AiScript : MonoBehaviour
 {
     private float speed = 3f;
@@ -21,12 +21,21 @@ public class AiScript : MonoBehaviour
 
     public BoxCollider roomForPathfinding;
 
+    #region Flocking behaviour settings
+    [Header("Flocking settings")]
+    FlockAgent selfAgent;
+    public FlockBehaviour flockingBehaviour;
+    [Range(0.1f, 10f)]
+    public float neighbourRadius = 0.1f;
+
+    #endregion
     private void Start()
     {
         // Makes Grid taking in X, Z, CellSize, displacement
         //BossRoom = new Pathfinding(10, 16, 1, new Vector3(-13, 0, -12));
         MainRoom = new Pathfinding(Mathf.RoundToInt(roomForPathfinding.size.x), Mathf.RoundToInt(roomForPathfinding.size.z), 1, roomForPathfinding.gameObject.transform.position);
         Player = GameObject.Find("Player");
+        selfAgent = GetComponent<FlockAgent>();
     }
 
     private void Update()
@@ -53,7 +62,9 @@ public class AiScript : MonoBehaviour
                 Vector3 MoveDirection = (TargetPosition - transform.position).normalized;
                 Debug.Log("Move Direction" + MoveDirection);
                 float DistanceBefore = Vector3.Distance(transform.position, TargetPosition);
-                this.transform.position = transform.position + MoveDirection * speed * Time.deltaTime;
+                MoveDirection += Vector3.RotateTowards(MoveDirection, flockingBehaviour.CalculateMove(selfAgent, GetNearbyObjects()), 1, 1);
+                MoveDirection.y = 0.0f;
+                transform.position += MoveDirection * speed * Time.deltaTime;
             }
             else
             {
@@ -71,6 +82,20 @@ public class AiScript : MonoBehaviour
         {
 
         }
+    }
+    private List<Transform> GetNearbyObjects()
+    {
+        List<Transform> context = new List<Transform>();
+        Collider[] contextColliders = Physics.OverlapSphere(transform.position, neighbourRadius);
+
+        foreach (var c in contextColliders)
+        {
+            if (c != this.GetComponent<Collider>())
+            {
+                context.Add(c.transform);
+            }
+        }
+        return context;
     }
 
     private void Stop()
@@ -97,6 +122,6 @@ public class AiScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, SightRange);
+        //Gizmos.DrawWireSphere(transform.position, SightRange);
     }
 }
