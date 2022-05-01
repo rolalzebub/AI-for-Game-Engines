@@ -66,6 +66,32 @@ public class FlockTesting : MonoBehaviour
         SpawnFlock();
     }
 
+    public static Vector3 GetRandomPointOnNavmesh(FlockAgent agent, float maxDistance)
+    {
+        bool canReachPoint = false;
+
+        while (!canReachPoint)
+        {
+            NavMeshHit hit = new NavMeshHit(); // NavMesh Sampling Info Container
+
+            bool foundPosition = false;
+
+            while (!foundPosition)
+            {
+                foundPosition = NavMesh.SamplePosition(agent.transform.position + Random.insideUnitSphere * maxDistance, out hit, maxDistance, NavMesh.AllAreas);
+            }
+
+            NavMeshPath path = new NavMeshPath();
+            
+            agent.GetComponent<NavMeshAgent>().CalculatePath(hit.position, path);
+            
+            canReachPoint = path.status == NavMeshPathStatus.PathComplete || path.status == NavMeshPathStatus.PathPartial;
+
+            return hit.position;
+        }
+
+        return Vector3.negativeInfinity;
+    }
 
     public void SetGoalForAllAgents(Vector3 mouseClickWorldPosition)
     {

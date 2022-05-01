@@ -81,6 +81,7 @@ public class FlockAgent : MonoBehaviour
         }
 
         move += behaviourMove;
+        move = Vector3.RotateTowards(move, behaviourMove, 0.1f, 0.5f);
 
         transform.forward = move.normalized;
         transform.position += transform.forward * speed * Time.deltaTime;
@@ -106,10 +107,12 @@ public class FlockAgent : MonoBehaviour
         }
     }
 
+
     private void DestinationReached()
     {
         Debug.Log(this.name + " reached its destination");
         isFollowingPath = false;
+        StartCoroutine(GetRandomNewDestination());
     }
 
     private List<Transform> GetNearbyObjects()
@@ -152,4 +155,12 @@ public class FlockAgent : MonoBehaviour
 
         }
     }
+
+    IEnumerator GetRandomNewDestination()
+    {
+        SetNewDestination(FlockTesting.GetRandomPointOnNavmesh(this, 10f));
+
+        yield return null;
+    }
+
 }

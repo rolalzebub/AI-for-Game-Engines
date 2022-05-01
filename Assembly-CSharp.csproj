@@ -70,6 +70,7 @@
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\Intersections.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\VoxelizeSceneEditor.cs" />
     <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\RegionAnalyzer.cs" />
+    <Compile Include="Assets\Scripts\Flocking\FlockTesting.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\Testing.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\AiScript.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\VoxelizeScene.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\AABB.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviour.cs" />
     <Compile Include="Assets\Scripts\Sequence.cs" />
-    <Compile Include="Assets\Scripts\Flocking\FlockTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

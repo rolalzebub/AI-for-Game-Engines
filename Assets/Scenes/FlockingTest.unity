@@ -244,8 +244,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 210914847}
-  m_LocalRotation: {x: -0.42852446, y: -0.22785129, z: 0.11151137, w: -0.86718845}
-  m_LocalPosition: {x: -7.6906567, y: 23.678623, z: -5.4076967}
+  m_LocalRotation: {x: 0.658266, y: 0.0018109531, z: -0.0001428053, w: 0.7527833}
+  m_LocalPosition: {x: 3.5542095, y: 21.275723, z: 6.9138145}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b360d48670545eb4e95ffe5240f59015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingCount: 50
+  startingCount: 20
   spawnCircleMultiplier: 2
   agentPrefab: {fileID: 6283957361862327188, guid: 5cb9a1f12b412d843aeb4e0fe511bb64, type: 3}
   behaviour: {fileID: 11400000, guid: 911e1357e98476b4da5630717e2f6dab, type: 2}

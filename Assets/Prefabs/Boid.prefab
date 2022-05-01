@@ -46,11 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e605f1656dd852944846438b52a2eb50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  driveFactor: 5
+  driveFactor: 20
   maxSpeed: 10
   neighbourRadius: 1
   avoidanceRadiusMultiplier: 0.8
-  goalToleranceDistance: 1
+  goalToleranceDistance: 0.5
 --- !u!195 &5774041990887249294
 NavMeshAgent:
   m_ObjectHideFlags: 0
