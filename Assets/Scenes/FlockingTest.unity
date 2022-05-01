@@ -484,6 +484,7 @@ GameObject:
   m_Component:
   - component: {fileID: 455513526}
   - component: {fileID: 455513525}
+  - component: {fileID: 455513527}
   m_Layer: 0
   m_Name: FlockTester
   m_TagString: Untagged
@@ -503,7 +504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b360d48670545eb4e95ffe5240f59015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingCount: 20
+  startingCount: 15
   spawnCircleMultiplier: 2
   agentPrefab: {fileID: 6283957361862327188, guid: 5cb9a1f12b412d843aeb4e0fe511bb64, type: 3}
   behaviour: {fileID: 11400000, guid: 911e1357e98476b4da5630717e2f6dab, type: 2}
@@ -522,6 +523,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &455513527
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455513524}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 0
+  m_AutoBraking: 0
+  m_AutoRepath: 0
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 0
 --- !u!1 &493824095
 GameObject:
   m_ObjectHideFlags: 0

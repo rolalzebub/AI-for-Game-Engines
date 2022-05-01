@@ -81,10 +81,14 @@ public class FlockAgent : MonoBehaviour
         }
 
         move += behaviourMove;
-        move = Vector3.RotateTowards(move, behaviourMove, 0.1f, 0.5f);
+        move = Vector3.RotateTowards(move, behaviourMove, 0.01f, 0.1f);
 
-        transform.forward = move.normalized;
-        transform.position += transform.forward * speed * Time.deltaTime;
+        if (move != Vector3.zero)
+        {
+            transform.forward = move.normalized;
+
+            transform.position += transform.forward * speed * Time.deltaTime;
+        }
 
         CheckForDestination();
     }
@@ -110,7 +114,6 @@ public class FlockAgent : MonoBehaviour
 
     private void DestinationReached()
     {
-        Debug.Log(this.name + " reached its destination");
         isFollowingPath = false;
         StartCoroutine(GetRandomNewDestination());
     }
@@ -144,21 +147,25 @@ public class FlockAgent : MonoBehaviour
 
         if(isFollowingPath)
         {
-            Debug.Log(this.name + " found a path to " + pathToFollow.corners[pathToFollow.corners.Length - 1]);
             currentPathGoal = pathToFollow.corners[0];
             currentPathGoalIndex = 0;
         }
         else
         {
-            Debug.Log(this.name + " could not find a path to " + dest);
             currentPathGoal = Vector3.zero;
-
         }
     }
 
     IEnumerator GetRandomNewDestination()
     {
-        SetNewDestination(FlockTesting.GetRandomPointOnNavmesh(this, 10f));
+        Vector3 newDest = FindObjectOfType<FlockTesting>().GetRandomPointOnNavmesh();
+
+        while(newDest == Vector3.negativeInfinity)
+        {
+            newDest = FindObjectOfType<FlockTesting>().GetRandomPointOnNavmesh();
+        }
+
+        SetNewDestination(newDest);
 
         yield return null;
     }

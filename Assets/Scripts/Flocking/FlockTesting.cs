@@ -16,6 +16,9 @@ public class FlockTesting : MonoBehaviour
     List<FlockAgent> agents = new List<FlockAgent>();
     public FlockBehaviour behaviour;
 
+    Queue<Vector3> randomPoints = new Queue<Vector3>();
+    bool isComputeRunning = false;
+    float randomPointMaxDistance = 10f;
 
     public void SpawnFlock()
     {
@@ -66,28 +69,19 @@ public class FlockTesting : MonoBehaviour
         SpawnFlock();
     }
 
-    public static Vector3 GetRandomPointOnNavmesh(FlockAgent agent, float maxDistance)
+    public Vector3 GetRandomPointOnNavmesh()
     {
-        bool canReachPoint = false;
-
-        while (!canReachPoint)
+        if(randomPoints.Count > 0)
         {
-            NavMeshHit hit = new NavMeshHit(); // NavMesh Sampling Info Container
-
-            bool foundPosition = false;
-
-            while (!foundPosition)
-            {
-                foundPosition = NavMesh.SamplePosition(agent.transform.position + Random.insideUnitSphere * maxDistance, out hit, maxDistance, NavMesh.AllAreas);
-            }
-
-            NavMeshPath path = new NavMeshPath();
+            return randomPoints.Dequeue();
+        }
+        else if(!isComputeRunning)
+        {
+            StartCoroutine(PrecomputeRandomPointsOnNavmesh());
             
-            agent.GetComponent<NavMeshAgent>().CalculatePath(hit.position, path);
-            
-            canReachPoint = path.status == NavMeshPathStatus.PathComplete || path.status == NavMeshPathStatus.PathPartial;
+            new WaitUntil(() => { return randomPoints.Count > 0; });
 
-            return hit.position;
+            return randomPoints.Dequeue();
         }
 
         return Vector3.negativeInfinity;
@@ -100,7 +94,41 @@ public class FlockTesting : MonoBehaviour
         {
             Vector3 destination = new Vector3(mouseClickWorldPosition.x, agent.transform.position.y, mouseClickWorldPosition.z);
             agent.SetNewDestination(destination);
-            Debug.Log("setting destination for " + agent.name + ":" + destination);
         }
+    }
+
+    IEnumerator PrecomputeRandomPointsOnNavmesh()
+    {
+        isComputeRunning = true;
+
+        while(randomPoints.Count < startingCount)
+        {
+            bool canReachPoint = false;
+
+            while (!canReachPoint)
+            {
+                NavMeshHit hit = new NavMeshHit(); // NavMesh Sampling Info Container
+
+                bool foundPosition = false;
+
+                while (!foundPosition)
+                {
+                    foundPosition = NavMesh.SamplePosition(transform.position + Random.insideUnitSphere * randomPointMaxDistance, out hit, randomPointMaxDistance, NavMesh.AllAreas);
+                }
+
+                NavMeshPath path = new NavMeshPath();
+
+                GetComponent<NavMeshAgent>().CalculatePath(hit.position, path);
+
+                canReachPoint = path.status == NavMeshPathStatus.PathComplete || path.status == NavMeshPathStatus.PathPartial;
+
+                if (canReachPoint)
+                    randomPoints.Enqueue(hit.position);
+
+            }
+        }
+
+        isComputeRunning = false;
+        yield return null;
     }
 }
