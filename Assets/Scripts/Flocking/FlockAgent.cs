@@ -1,13 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 
-[RequireComponent(typeof(Collider))]
 public class FlockAgent : MonoBehaviour
 {
     Collider agentCollider;
-    public Vector3 currentVelocity;
+    
+    [Range(1f, 100f)]
+    public float driveFactor = 10f;
+    [Range(1f, 100f)]
+    public float maxSpeed = 5f;
+    [Range(0.1f, 10f)]
+    public float neighbourRadius = 0.5f;
+    [Range(0f, 1f)]
+    public float avoidanceRadiusMultiplier = 0.5f;
+
+    float squaredMaxSpeed, squaredNeighbourRadius, squaredAvoidanceRadius;
+
+    FlockBehaviour behaviour;
+
+    NavMeshPath pathToFollow;
+    bool isFollowingPath = false;
+    int currentPathGoalIndex = 0;
+    Vector3 currentPathGoal;
+    public float goalToleranceDistance = 1f;
+
+    float speed;
 
     public Collider AgentCollider
     {
@@ -17,17 +38,118 @@ public class FlockAgent : MonoBehaviour
         }
     }
 
+    public float SquaredAvoidanceRadius
+    {
+        get
+        {
+            return squaredAvoidanceRadius;
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
     {
-        agentCollider = GetComponent<Collider>();
+        speed = UnityEngine.Random.Range(2f, 5f);
+        agentCollider = GetComponent<Collider>(); 
+        squaredMaxSpeed = maxSpeed * maxSpeed;
+        squaredNeighbourRadius = neighbourRadius * neighbourRadius;
+        squaredAvoidanceRadius = squaredNeighbourRadius * avoidanceRadiusMultiplier * avoidanceRadiusMultiplier;
     }
 
-    public void Move(Vector3 velocity)
+
+    private void Update()
     {
-        currentVelocity += velocity;
-        transform.forward = currentVelocity.normalized;
-        transform.position += transform.forward * Time.deltaTime;
+        if(isFollowingPath)
+        {
+            Vector3 directionToMove = currentPathGoal - transform.position;
+            Move(directionToMove);
+        }
+    }
+
+    public void Move(Vector3 direction)
+    {
+        Vector3 move = direction;
+
+        Vector3 behaviourMove = behaviour.CalculateMove(this, GetNearbyObjects());
+
+        behaviourMove *= driveFactor;
+
+        if (behaviourMove.sqrMagnitude > squaredMaxSpeed)
+        {
+            behaviourMove = behaviourMove.normalized * maxSpeed;
+        }
+
+        move += behaviourMove;
+
+        transform.forward = move.normalized;
+        transform.position += transform.forward * speed * Time.deltaTime;
+
+        CheckForDestination();
+    }
+
+    private void CheckForDestination()
+    {
+        float dst = Mathf.Abs((currentPathGoal - transform.position).magnitude);
+
+        if(dst <= goalToleranceDistance)
+        {
+            if(currentPathGoalIndex < pathToFollow.corners.Length - 1)
+            {
+                currentPathGoalIndex++;
+                currentPathGoal = pathToFollow.corners[currentPathGoalIndex];
+            }
+            else
+            {
+                DestinationReached();
+            }
+        }
+    }
+
+    private void DestinationReached()
+    {
+        Debug.Log(this.name + " reached its destination");
+        isFollowingPath = false;
+    }
+
+    private List<Transform> GetNearbyObjects()
+    {
+        List<Transform> context = new List<Transform>();
+        Collider[] contextColliders = Physics.OverlapSphere(transform.position, neighbourRadius);
+
+        foreach (var c in contextColliders)
+        {
+            var nextAgent = c.GetComponentInParent<FlockAgent>();
+            if (c != AgentCollider && nextAgent != null)
+            {
+                context.Add(c.transform);
+            }
+        }
+
+        return context;
+    }
+
+    public void SetFlockingBehaviour(FlockBehaviour _behaviour)
+    {
+        behaviour = _behaviour;
+    }
+
+    public void SetNewDestination(Vector3 dest)
+    {
+        pathToFollow = new NavMeshPath();
+        isFollowingPath = NavMesh.CalculatePath(transform.position, dest, NavMesh.AllAreas, pathToFollow);
+
+        if(isFollowingPath)
+        {
+            Debug.Log(this.name + " found a path to " + pathToFollow.corners[pathToFollow.corners.Length - 1]);
+            currentPathGoal = pathToFollow.corners[0];
+            currentPathGoalIndex = 0;
+        }
+        else
+        {
+            Debug.Log(this.name + " could not find a path to " + dest);
+            currentPathGoal = Vector3.zero;
+
+        }
     }
 }

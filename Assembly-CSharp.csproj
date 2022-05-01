@@ -81,7 +81,6 @@
     <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\SpanGraph.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\EnableWaves.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\Spawner.cs" />
-    <Compile Include="Assets\Scripts\Flocking\Flock.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\PlayerAnimator.cs" />
     <Compile Include="Assets\Scripts\EnemyBehaviour.cs" />
     <Compile Include="Assets\Scripts\BehaviourTree.cs" />
@@ -95,6 +94,7 @@
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\AABB.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviour.cs" />
     <Compile Include="Assets\Scripts\Sequence.cs" />
+    <Compile Include="Assets\Scripts\Flocking\FlockTesting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

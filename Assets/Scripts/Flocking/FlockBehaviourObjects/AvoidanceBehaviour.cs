@@ -5,18 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Flock/Behaviour/Avoidance")]
 public class AvoidanceBehaviour : FlockBehaviour
 {
-    [Range(0.1f, 10f)]
-    public float neighbourRadius = 0.1f;
-    [Range(0f, 1f)]
-    public float avoidanceRadiusMultiplier = 0.5f;
-
-    float squaredAvoidanceRadius;
-
-    public AvoidanceBehaviour()
-    {
-        squaredAvoidanceRadius = neighbourRadius * neighbourRadius * avoidanceRadiusMultiplier * avoidanceRadiusMultiplier;
-    }
-
     public override Vector3 CalculateMove(FlockAgent agent, List<Transform> context)
     {
         Vector3 avoidanceMove = Vector3.zero;
@@ -30,7 +18,7 @@ public class AvoidanceBehaviour : FlockBehaviour
         //add all points together and average if there are
         foreach (var item in context)
         {
-            if(Vector3.SqrMagnitude(item.position-agent.transform.position) < squaredAvoidanceRadius)
+            if(Vector3.SqrMagnitude(item.position - agent.transform.position) < agent.SquaredAvoidanceRadius)
             {
                 nAvoid++;
                 avoidanceMove += agent.transform.position - item.position ;
