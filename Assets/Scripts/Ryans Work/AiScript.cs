@@ -36,6 +36,7 @@ public class AiScript : MonoBehaviour
         MainRoom = new Pathfinding(Mathf.RoundToInt(roomForPathfinding.size.x), Mathf.RoundToInt(roomForPathfinding.size.z), 1, roomForPathfinding.gameObject.transform.position);
         Player = GameObject.Find("Player");
         selfAgent = GetComponent<FlockAgent>();
+        selfAgent.SetFlockingBehaviour(flockingBehaviour);
     }
 
     private void Update()
@@ -62,9 +63,9 @@ public class AiScript : MonoBehaviour
                 Vector3 MoveDirection = (TargetPosition - transform.position).normalized;
                 Debug.Log("Move Direction" + MoveDirection);
                 float DistanceBefore = Vector3.Distance(transform.position, TargetPosition);
-                MoveDirection += Vector3.RotateTowards(MoveDirection, flockingBehaviour.CalculateMove(selfAgent, GetNearbyObjects()), 1, 1);
                 MoveDirection.y = 0.0f;
-                transform.position += MoveDirection * speed * Time.deltaTime;
+                selfAgent.Move(MoveDirection * speed);
+                //transform.position += MoveDirection * speed * Time.deltaTime;
             }
             else
             {
@@ -72,16 +73,13 @@ public class AiScript : MonoBehaviour
                 CurrentIndex++;
                 if (CurrentIndex >= PathList.Count)
                 {
-                    CanMove = true;
                     Stop();
+                    CanMove = true;
                 }
             }
 
         }
-        else
-        {
-
-        }
+        
     }
     private List<Transform> GetNearbyObjects()
     {

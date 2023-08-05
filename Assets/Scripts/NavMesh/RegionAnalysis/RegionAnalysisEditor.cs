@@ -17,5 +17,10 @@ public class RegionAnalysisEditor : Editor
             (target as RegionAnalyzer).CreateSpanGraphFromHeightfield(hf);
             (target as RegionAnalyzer).graphCreated = true;
         }
+
+        if(GUILayout.Button("Clear Graph"))
+        {
+            (target as RegionAnalyzer).ClearGraph();
+        }
     }
 }

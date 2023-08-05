@@ -360,7 +360,6 @@ GameObject:
   - component: {fileID: 364650547}
   - component: {fileID: 364650546}
   - component: {fileID: 364650545}
-  - component: {fileID: 364650544}
   m_Layer: 0
   m_Name: Tri_Wall (Tri-Planar) (1)
   m_TagString: Untagged
@@ -383,19 +382,6 @@ Transform:
   m_Father: {fileID: 284573262}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &364650544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 364650542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c6b4d21c419e15489b502a9ac2c9e6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isWalkable: 0
 --- !u!114 &364650545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,77 +460,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 364650542}
   m_Mesh: {fileID: 4300000, guid: ce324065b8c2bab40a56a92a4b15f1d7, type: 3}
---- !u!1 &455513524
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 455513526}
-  - component: {fileID: 455513525}
-  - component: {fileID: 455513527}
-  m_Layer: 0
-  m_Name: FlockTester
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &455513525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 455513524}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b360d48670545eb4e95ffe5240f59015, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startingCount: 15
-  spawnCircleMultiplier: 2
-  agentPrefab: {fileID: 6283957361862327188, guid: 5cb9a1f12b412d843aeb4e0fe511bb64, type: 3}
-  behaviour: {fileID: 11400000, guid: 911e1357e98476b4da5630717e2f6dab, type: 2}
---- !u!4 &455513526
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 455513524}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3, y: 3, z: 10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!195 &455513527
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 455513524}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 0
-  m_AutoBraking: 0
-  m_AutoRepath: 0
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 0
 --- !u!1 &493824095
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,7 +518,6 @@ GameObject:
   - component: {fileID: 723243008}
   - component: {fileID: 723243007}
   - component: {fileID: 723243006}
-  - component: {fileID: 723243005}
   m_Layer: 0
   m_Name: Tri_Wall (Tri-Planar) (2)
   m_TagString: Untagged
@@ -626,19 +540,6 @@ Transform:
   m_Father: {fileID: 284573262}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
---- !u!114 &723243005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 723243003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c6b4d21c419e15489b502a9ac2c9e6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isWalkable: 0
 --- !u!114 &723243006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -729,6 +630,8 @@ GameObject:
   - component: {fileID: 801464925}
   - component: {fileID: 801464924}
   - component: {fileID: 801464923}
+  - component: {fileID: 801464928}
+  - component: {fileID: 801464927}
   m_Layer: 0
   m_Name: Blockout
   m_TagString: Untagged
@@ -808,6 +711,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &801464927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801464922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a9b46454ac55a4280669f427d0018d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  XZCellSize: 0.5
+  YCellSize: 1
+  debugMode: 2
+  maxWalkableSlope: 45
+--- !u!114 &801464928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801464922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 625f2fb8ee63aa8438410de72f25dbfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxTraversableHeight: 1
+  maxStepDistance: 0.55
+  agentHeight: 1
+  agentRadius: 0.25
 --- !u!1 &1137458397
 GameObject:
   m_ObjectHideFlags: 0
@@ -956,7 +891,6 @@ GameObject:
   - component: {fileID: 1311171169}
   - component: {fileID: 1311171168}
   - component: {fileID: 1311171167}
-  - component: {fileID: 1311171166}
   m_Layer: 0
   m_Name: Tri_Wall (Tri-Planar)
   m_TagString: Untagged
@@ -979,19 +913,6 @@ Transform:
   m_Father: {fileID: 284573262}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1311171166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1311171164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c6b4d21c419e15489b502a9ac2c9e6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isWalkable: 0
 --- !u!114 &1311171167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1083,7 +1004,6 @@ GameObject:
   - component: {fileID: 1339173779}
   - component: {fileID: 1339173778}
   - component: {fileID: 1339173777}
-  - component: {fileID: 1339173776}
   m_Layer: 0
   m_Name: Tri_Wall (Tri-Planar) (3)
   m_TagString: Untagged
@@ -1106,19 +1026,6 @@ Transform:
   m_Father: {fileID: 284573262}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 90}
---- !u!114 &1339173776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1339173774}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c6b4d21c419e15489b502a9ac2c9e6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isWalkable: 0
 --- !u!114 &1339173777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1394,7 +1301,6 @@ GameObject:
   - component: {fileID: 1701269444}
   - component: {fileID: 1701269443}
   - component: {fileID: 1701269442}
-  - component: {fileID: 1701269441}
   m_Layer: 0
   m_Name: Tri_Floor (Tri-Planar)
   m_TagString: Untagged
@@ -1417,19 +1323,6 @@ Transform:
   m_Father: {fileID: 296664686}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1701269441
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1701269439}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c6b4d21c419e15489b502a9ac2c9e6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isWalkable: 1
 --- !u!114 &1701269442
 MonoBehaviour:
   m_ObjectHideFlags: 0
