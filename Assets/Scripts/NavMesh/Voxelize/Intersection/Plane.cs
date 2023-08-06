@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Plane
+public struct Plane
 {
 
     public Vector3 Normal { get { return normal; } }
     public float Distance { get { return distance; } }
 
-    protected Vector3 normal;
-    protected float distance;
+    private Vector3 normal;
+    private float distance;
 
     public Plane(Vector3 normal, float distance)
     {

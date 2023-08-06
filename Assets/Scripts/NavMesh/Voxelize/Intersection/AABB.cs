@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AABB
+public struct AABB
 {
     public Vector3 Min { get { return min; } }
     public Vector3 Max { get { return max; } }
     public Vector3 Center { get { return (min + max) * 0.5f; } }
 
-    protected Vector3 min, max;
+    private Vector3 min, max;
 
     public AABB(Vector3 min, Vector3 max)
     {

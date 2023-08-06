@@ -5,7 +5,6 @@ using System.Linq;
 
 public class VoxelizeScene : MonoBehaviour
 {
-    List<SceneMeshObject> allSceneMeshes;
     public float XZCellSize;
     public float YCellSize;
 
@@ -37,14 +36,14 @@ public class VoxelizeScene : MonoBehaviour
 
     public void VoxelizeSceneByCombiningMeshes()
     {
-        allSceneMeshes = new List<SceneMeshObject>(FindObjectsOfType<SceneMeshObject>().Where(x => x.enabled == true).ToArray());
-
+        var allSceneMeshes = FindObjectsOfType<MeshFilter>().Where(x => x.gameObject.isStatic == true);
+        
         Mesh sceneMesh = new Mesh();
-        CombineInstance[] meshesToCombine = new CombineInstance[allSceneMeshes.Count];
-        for(int i = 0; i < allSceneMeshes.Count; i++)
+        CombineInstance[] meshesToCombine = new CombineInstance[allSceneMeshes.Count()];
+        for(int i = 0; i < allSceneMeshes.Count(); i++)
         {
-            meshesToCombine[i].mesh = allSceneMeshes[i].GetMesh().sharedMesh;
-            meshesToCombine[i].transform = allSceneMeshes[i].GetMesh().transform.localToWorldMatrix;
+            meshesToCombine[i].mesh = allSceneMeshes.ElementAt(i).sharedMesh;
+            meshesToCombine[i].transform = allSceneMeshes.ElementAt(i).transform.localToWorldMatrix;
 
         }
         sceneMesh.CombineMeshes(meshesToCombine);

@@ -199,22 +199,20 @@ public class Heightfield
     #endregion
 }
 
-public class HeightfieldSpan
+public struct HeightfieldSpan
 {
     public HeightFieldVoxelType type;
 
     List<HeightfieldVoxel> spanVoxels;
 
-    AABB spanBounds = null;
+    AABB spanBounds;
 
     public AABB SpanBounds
     {
         get
         {
-            if (spanBounds == null)
-            {
-                CalculateSpanBounds();
-            }
+            
+            CalculateSpanBounds();
 
             return spanBounds;
         }
@@ -247,27 +245,24 @@ public class HeightfieldSpan
 
     public HeightfieldSpan(HeightfieldVoxel startingVoxel)
     {
-        spanVoxels = new List<HeightfieldVoxel>();
-        spanVoxels.Add(startingVoxel);
+        
+        spanVoxels = new List<HeightfieldVoxel>() { startingVoxel };
+
+        spanBounds = startingVoxel.VoxelBounds;
         type = startingVoxel.type;
     }
 
     public float GetSpanHeight()
     {
-        if (spanBounds == null)
-        {
-            CalculateSpanBounds();
-        }
+        
+        CalculateSpanBounds();
 
         return SpanBounds.Max.y - SpanBounds.Min.y;
     }
 
     public float GetSpanStartHeight()
     {
-        if (spanBounds == null)
-        {
-            CalculateSpanBounds();
-        }
+        CalculateSpanBounds();
 
         return SpanBounds.Min.y;
     }
@@ -313,7 +308,7 @@ public class HeightfieldSpan
     }
 }
 
-public class HeightfieldVoxel
+public struct HeightfieldVoxel
 {
     Vector3[] vertices;
 
@@ -330,6 +325,9 @@ public class HeightfieldVoxel
 
     public HeightfieldVoxel(Vector3[] _vertices, float XZSize, float YSize)
     {
+        type = HeightFieldVoxelType.Open;
+        isWalkable = false;
+
         Bounds bounds = new Bounds();
         vertices = _vertices;
 

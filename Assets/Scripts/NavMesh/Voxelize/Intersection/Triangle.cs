@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Triangle
+public struct Triangle
 {
 
     public Vector3 A { get { return a; } }
@@ -15,8 +15,8 @@ public class Triangle
 
     public Vector3 Normal { get { return normal; } }
 
-    protected Vector3 a, b, c, normal;
-    protected Vector3 ab, bc, ca;
+    private Vector3 a, b, c, normal;
+    private Vector3 ab, bc, ca;
 
     public Triangle(Vector3 a, Vector3 b, Vector3 c)
     {
