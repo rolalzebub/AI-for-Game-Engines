@@ -15,18 +15,8 @@ public class VoxelizeScene : MonoBehaviour
     public bool sceneVoxed = false;
 
     public DebugHeightSpanDrawMode debugMode;
-
-    /// <summary>
-    /// The maximum incline angle (degrees) that can be considered walkable.
-    /// </summary>
     public float maxWalkableSlope = 45f;
 
-
-    /// <summary>
-    /// Check which triangles in the combined scene geometry can be considered walkable by checking what direction the triangle faces. If the angle between the triangle's normal vector and Vector3.up is within maxWalkableSlope degrees, the triangle is considered walkable.
-    /// </summary>
-    /// <param name="combinedSceneMesh"></param>
-    /// <returns></returns>
     private Triangle[] GetWalkableTriangles(Mesh combinedSceneMesh)
     {
         List<Triangle> walkableTriangles = new List<Triangle>();
@@ -45,33 +35,23 @@ public class VoxelizeScene : MonoBehaviour
         return walkableTriangles.ToArray();
     }
 
-    /// <summary>
-    /// Create a voxel grid that encompasses all relevant scene geometry. This function retrieves all meshes in the scene that have the "SceneMeshObject" component attached, combines them all into a single mesh, and then uses that mesh for generating the voxel grid.
-    /// </summary>
     public void VoxelizeSceneByCombiningMeshes()
     {
-        //find all static meshes in the scene
-        var sceneMeshCollection = FindObjectsOfType<MeshFilter>().Where(x => x.gameObject.isStatic);
+        allSceneMeshes = new List<SceneMeshObject>(FindObjectsOfType<SceneMeshObject>().Where(x => x.enabled == true).ToArray());
 
         Mesh sceneMesh = new Mesh();
-
-        //use Unity's own mesh combiner to generate final mesh
         CombineInstance[] meshesToCombine = new CombineInstance[allSceneMeshes.Count];
-        
-        for (int i = 0; i < sceneMeshCollection.Count(); i++)
+        for(int i = 0; i < allSceneMeshes.Count; i++)
         {
-            meshesToCombine[i].mesh = sceneMeshCollection.ElementAt(i).sharedMesh;
-            
-            //mesh combiner lets us use the localToWorldMatrix in the mesh to convert its coordinates to world space automatically at "combine-time"
-            meshesToCombine[i].transform = sceneMeshCollection.ElementAt(i).transform.localToWorldMatrix;
-        }
+            meshesToCombine[i].mesh = allSceneMeshes[i].GetMesh().sharedMesh;
+            meshesToCombine[i].transform = allSceneMeshes[i].GetMesh().transform.localToWorldMatrix;
 
+        }
         sceneMesh.CombineMeshes(meshesToCombine);
 
-        //generate voxel grid a.k.a. Heightfield
         sceneField = new Heightfield(XZCellSize, YCellSize);
 
-        sceneField.CreateVoxelGrid(sceneMesh.bounds);
+        sceneField.CreateHeightFieldGrid(sceneMesh.bounds);
         sceneField.CheckHeightfieldAgainstTriangles(GetWalkableTriangles(sceneMesh), sceneMesh);
         sceneField.ConvertHeightfieldGridToSpans(sceneMesh);
         sceneVoxed = true;
@@ -141,8 +121,7 @@ public class VoxelizeScene : MonoBehaviour
                     {
                         var spanVoxels = item.GetSpanVoxels();
 
-                        //we want to find the minimum and maximum for the entire span here
-                        Vector3 min = Vector3.positiveInfinity, max = Vector3.negativeInfinity;
+                        Vector3 min = spanVoxels[0].VoxelBounds.Min, max = Vector3.zero;
 
                         foreach (var voxel in spanVoxels)
                         {

@@ -47,7 +47,7 @@ public class Pathfinding
             List<Vector3> VectorPath = new List<Vector3>();
             foreach(PathfindingNode pathfindingNode in Path)
             {
-                VectorPath.Add(new Vector3(pathfindingNode.X, 0f, pathfindingNode.Z) * grid.GetCellSize() + Vector3.one * grid.GetCellSize() * 0.5f);
+                VectorPath.Add(new Vector3(pathfindingNode.X, pathfindingNode.Z) * grid.GetCellSize() + Vector3.one * grid.GetCellSize() * 0.5f);
             }
             return VectorPath;
         }

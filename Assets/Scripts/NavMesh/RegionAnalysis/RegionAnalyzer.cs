@@ -83,10 +83,6 @@ public class RegionAnalyzer: MonoBehaviour
         graph.MakeAllNeighbourConnections();
     }
 
-    public void ClearGraph()
-    {
-        graphCreated = false;
-    }
 
     private void OnDrawGizmosSelected()
 
