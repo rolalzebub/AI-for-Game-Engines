@@ -125,18 +125,18 @@ public class SpanGraph
             NeighbourNodes.Add(newNeighbour);
         }
 
-        public bool IsConnectedTo(HeightfieldSpan nb)
-        {
-            foreach (var node in NeighbourNodes)
-            {
-                if (node.span == nb)
-                {
-                    return true;
-                }
-            }
+        //public bool IsConnectedTo(HeightfieldSpan nb)
+        //{
+        //    foreach (var node in NeighbourNodes)
+        //    {
+        //        if (node.span == nb)
+        //        {
+        //            return true;
+        //        }
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
         /// <summary>
         /// returns a vector3 that is the middle of the floorspace covered by this span

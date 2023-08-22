@@ -1,6 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
+
 
 public class Heightfield
 {
@@ -22,6 +27,7 @@ public class Heightfield
     #endregion
 
     Vector3[,,] verts;
+    
 
     /// <summary>
     /// 2D Array of list of vertical spans
@@ -86,8 +92,21 @@ public class Heightfield
 
     public void CheckHeightfieldAgainstTriangles(Triangle[] walkableTriangles, Mesh sceneMesh)
     {
+        //init voxel grid
         voxelGrid = new HeightfieldVoxel[gridRows - 1, gridColumns - 1, gridRows - 1];
-        List<Triangle> trianglesList = new List<Triangle>(walkableTriangles);
+
+        //jobs method of doing it
+        //create triangles collection
+        NativeArray<Triangle> sceneTriangles = new NativeArray<Triangle>(sceneMesh.triangles.Length, Allocator.TempJob);
+        for (int i = 0; i < sceneMesh.triangles.Length; i += 3)
+        {
+            sceneTriangles[i] = new Triangle(sceneMesh.vertices[sceneMesh.triangles[i]], sceneMesh.vertices[sceneMesh.triangles[i + 1]], sceneMesh.vertices[sceneMesh.triangles[i + 2]]);
+        }
+
+        NativeArray<Triangle> walkableTris = new NativeArray<Triangle>(walkableTriangles, Allocator.TempJob);
+
+        //create voxels collection
+        NativeArray<HeightfieldVoxel> voxelGridFlatPacked = new NativeArray<HeightfieldVoxel>((gridRows - 1) * (gridRows - 1) * (gridColumns - 1), Allocator.TempJob);
 
         for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
         {
@@ -103,35 +122,104 @@ public class Heightfield
                         verts[xIndex+1, yIndex+1, zIndex+1], verts[xIndex+1, yIndex+1, zIndex + 1]
                     };
 
+                    //flat pack voxels
+                    //formula for 3d index to 1d index conversion = x + (y * gridRows) + (z * gridRows * gridColumns)
+                    int currentIndex = xIndex + (yIndex * (gridRows - 1)) + (zIndex * (gridRows - 1) * (gridColumns - 1));
                     HeightfieldVoxel voxel = new HeightfieldVoxel(voxelVerts, XZCellSize, YCellSize);
-
-                    for (int i = 0; i < sceneMesh.triangles.Length; i+=3)
-                    {
-                        Triangle tri = new Triangle(sceneMesh.vertices[sceneMesh.triangles[i]], sceneMesh.vertices[sceneMesh.triangles[i + 1]], sceneMesh.vertices[sceneMesh.triangles[i + 2]]);
-
-                        bool result = Intersections.Intersects(tri, voxel.VoxelBounds);
-
-                        voxel.isWalkable = trianglesList.Contains(tri);
-
-                        if (result)
-                        {
-                            voxel.type = HeightFieldVoxelType.Closed;
-                            voxel.intersectingTriangleNormal = tri.Normal;
-
-                            voxelGrid[xIndex, yIndex, zIndex] = voxel;
-                            break;
-                        }
-                        else
-                        {
-                            voxel.type = HeightFieldVoxelType.Open;
-                        }
-
-                        voxelGrid[xIndex, yIndex, zIndex] = voxel;
-                    }
-
+                    voxelGridFlatPacked[currentIndex] = voxel;
                 }
             }
         }
+
+        //create job
+        VoxelFieldGenerationJob vJob = new VoxelFieldGenerationJob()
+        {
+            voxelField = voxelGridFlatPacked,
+            triangles = sceneTriangles,
+            walkableTriangles = walkableTris
+        };
+
+        //randomly selected a number for num of threads
+        int threadCount = 16;
+        int innerLoopBatchCount = voxelGridFlatPacked.Count() / threadCount;
+        //clamp lower limit of value to 1
+        innerLoopBatchCount = innerLoopBatchCount < 1 ? 1 : innerLoopBatchCount;
+
+        JobHandle vJobHandle = vJob.Schedule(voxelGridFlatPacked.Count(), voxelGridFlatPacked.Count() / threadCount);
+
+        vJobHandle.Complete();
+
+        //unpack voxels into grid
+        for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
+        {
+            for (int yIndex = 0; yIndex < gridColumns - 1; yIndex++)
+            {
+                for (int zIndex = 0; zIndex < gridRows - 1; zIndex++)
+                {
+                    int voxelIndex = xIndex + (yIndex * (gridRows - 1)) + (zIndex * (gridRows - 1) * (gridColumns - 1));
+
+                    voxelGrid[xIndex, yIndex, zIndex] = vJob.voxelField[voxelIndex];
+                }
+            }
+        }
+
+        //dispose native arrays
+        voxelGridFlatPacked.Dispose();
+        sceneTriangles.Dispose();
+        walkableTris.Dispose();
+
+        #region old method single threaded and main thread blocking way of creating voxel field
+        //this code has been left here for documenting reasons
+        //new method is 61% faster
+        //old method: 8.6 seconds
+        //new method: 3.3 seconds
+
+        //List<Triangle> trianglesList = new List<Triangle>(walkableTriangles);
+
+        //for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
+        //{
+        //    for (int yIndex = 0; yIndex < gridColumns - 1; yIndex++)
+        //    {
+        //        for (int zIndex = 0; zIndex < gridRows - 1; zIndex++)
+        //        {
+        //            Vector3[] voxelVerts = new Vector3[8]
+        //            {
+        //                verts[xIndex, yIndex, zIndex], verts[xIndex, yIndex + 1, zIndex],
+        //                verts[xIndex+1, yIndex + 1, zIndex], verts[xIndex+1, yIndex, zIndex],
+        //                verts[xIndex, yIndex, zIndex + 1], verts[xIndex, yIndex+1, zIndex + 1],
+        //                verts[xIndex+1, yIndex+1, zIndex+1], verts[xIndex+1, yIndex+1, zIndex + 1]
+        //            };
+
+        //            HeightfieldVoxel voxel = new HeightfieldVoxel(voxelVerts, XZCellSize, YCellSize);
+
+        //            for (int i = 0; i < sceneMesh.triangles.Length; i += 3)
+        //            {
+        //                Triangle tri = new Triangle(sceneMesh.vertices[sceneMesh.triangles[i]], sceneMesh.vertices[sceneMesh.triangles[i + 1]], sceneMesh.vertices[sceneMesh.triangles[i + 2]]);
+
+        //                bool result = Intersections.Intersects(tri, voxel.VoxelBounds);
+
+        //                voxel.isWalkable = trianglesList.Contains(tri);
+
+        //                if (result)
+        //                {
+        //                    voxel.type = HeightFieldVoxelType.Closed;
+        //                    voxel.intersectingTriangleNormal = tri.Normal;
+
+        //                    voxelGrid[xIndex, yIndex, zIndex] = voxel;
+        //                    break;
+        //                }
+        //                else
+        //                {
+        //                    voxel.type = HeightFieldVoxelType.Open;
+        //                }
+
+        //                voxelGrid[xIndex, yIndex, zIndex] = voxel;
+        //            }
+
+        //        }
+        //    }
+        //}
+        #endregion
     }
 
     public void CreateHeightFieldGrid(Bounds _sceneBounds)
@@ -164,7 +252,7 @@ public class Heightfield
                         verts[0, 0, 0] = startPos;
                         firstVert = true;
 
-                        Debug.Log(_sceneBounds.min);
+                        UnityEngine.Debug.Log(_sceneBounds.min);
                     }
                     else
                     {
@@ -211,7 +299,6 @@ public struct HeightfieldSpan
     {
         get
         {
-            
             CalculateSpanBounds();
 
             return spanBounds;
@@ -245,7 +332,6 @@ public struct HeightfieldSpan
 
     public HeightfieldSpan(HeightfieldVoxel startingVoxel)
     {
-        
         spanVoxels = new List<HeightfieldVoxel>() { startingVoxel };
 
         spanBounds = startingVoxel.VoxelBounds;
@@ -309,9 +395,7 @@ public struct HeightfieldSpan
 }
 
 public struct HeightfieldVoxel
-{
-    Vector3[] vertices;
-
+{    
     public HeightFieldVoxelType type;
 
     public AABB VoxelBounds;
@@ -323,17 +407,19 @@ public struct HeightfieldVoxel
     /// </summary>
     public Vector3 intersectingTriangleNormal;
 
+    public float XZCellSize, YCellSize;
+
     public HeightfieldVoxel(Vector3[] _vertices, float XZSize, float YSize)
     {
         type = HeightFieldVoxelType.Open;
         isWalkable = false;
 
         Bounds bounds = new Bounds();
-        vertices = _vertices;
+        //vertices = _vertices;
 
-        bounds.min = bounds.max = vertices[0];
+        bounds.min = bounds.max = _vertices[0];
 
-        foreach (var item in vertices)
+        foreach (var item in _vertices)
         {
             bounds.min = Vector3.Min(item, bounds.min);
             bounds.max = Vector3.Max(item, bounds.max);
@@ -342,6 +428,9 @@ public struct HeightfieldVoxel
         VoxelBounds = new AABB(bounds);
 
         intersectingTriangleNormal = Vector3.zero;
+
+        XZCellSize = XZSize;
+        YCellSize = YSize;
     }
 }
 public enum HeightFieldVoxelType
@@ -353,4 +442,35 @@ public enum HeightFieldVoxelType
 public struct HQuad
 {
     public Vector3 bottomLeft, topLeft, topRight, bottomRight;
+}
+
+struct VoxelFieldGenerationJob : IJobParallelFor
+{
+    public NativeArray<HeightfieldVoxel> voxelField;
+
+    public NativeArray<Triangle> triangles;
+
+    public NativeArray<Triangle> walkableTriangles;
+
+    public void Execute(int index)
+    {
+        foreach(Triangle triangle in triangles)
+        {
+            if (Intersections.Intersects(voxelField[index].VoxelBounds, triangle))
+            {
+                //need to do it this way because can't alter members of items in native array directly
+                var v = voxelField[index];
+                v.type = HeightFieldVoxelType.Closed;
+
+                if(walkableTriangles.Contains(triangle))
+                {
+                    v.isWalkable = true;
+                }
+
+                voxelField[index] = v;
+
+                return;
+            }
+        }
+    }
 }

@@ -1564,7 +1564,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37a9b46454ac55a4280669f427d0018d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  XZCellSize: 0.5
+  XZCellSize: 1
   YCellSize: 1
   debugMode: 2
   maxWalkableSlope: 45
