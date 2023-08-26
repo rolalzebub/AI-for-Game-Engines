@@ -1488,8 +1488,8 @@ Transform:
   m_GameObject: {fileID: 1375423954}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.05, y: 2.05, z: 2.05}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 2.05, y: 2.05, z: 5.99}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 495103151}
   - {fileID: 1329287768}
@@ -1565,7 +1565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   XZCellSize: 1
-  YCellSize: 1
+  YCellSize: 0.5
   debugMode: 2
   maxWalkableSlope: 45
 --- !u!1 &1599941285

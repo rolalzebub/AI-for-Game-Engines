@@ -74,9 +74,9 @@ public class VoxelizeScene : MonoBehaviour
         if (grid == null)
             return;
             
-        for(int xIndex = 0; xIndex < sceneField.gridRows - 1; xIndex++)
+        for(int xIndex = 0; xIndex < sceneField.gridRowsX - 1; xIndex++)
         {
-            for(int zIndex = 0; zIndex < sceneField.gridRows - 1; zIndex++)
+            for(int zIndex = 0; zIndex < sceneField.gridRowsZ - 1; zIndex++)
             {
 
                 foreach(var item in grid[xIndex, zIndex])

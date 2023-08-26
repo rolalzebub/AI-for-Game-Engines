@@ -56,42 +56,42 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\NavMesh\Voxelize\SceneMeshObject.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\SceneChanger.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\PlayerHandler.cs" />
-    <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\SpanGraph.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\EnableWaves.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\Spawner.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\Plane.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\PlayerAnimator.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\Triangle.cs" />
-    <Compile Include="Assets\Scripts\EnemyBehaviour.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviourObjects\AlignmentBehaviour.cs" />
-    <Compile Include="Assets\Scripts\BehaviourTree.cs" />
     <Compile Include="Assets\Scripts\Leaf.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\SpikeTrap.cs" />
-    <Compile Include="Assets\Scripts\Flocking\FlockBehaviourObjects\AvoidanceBehaviour.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\PathfindingNode.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviourObjects\CompositeBehaviour.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\KillBox.cs" />
     <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\RegionAnalysisEditor.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviourObjects\CohesionBehaviour.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\LevelManager.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\Grid.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\Intersections.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\VoxelizeSceneEditor.cs" />
     <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\RegionAnalyzer.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockTesting.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\Testing.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\AiScript.cs" />
-    <Compile Include="Assets\Scripts\NavMesh\Voxelize\Heightfield.cs" />
-    <Compile Include="Assets\Scripts\Flocking\FlockAgent.cs" />
-    <Compile Include="Assets\Scripts\Ryans Work\MainMenu.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\VoxelizeScene.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\Pathfinding.cs" />
+    <Compile Include="Assets\Scripts\NavMesh\Voxelize\SceneMeshObject.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\HealthBar.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\PlayerHandler.cs" />
+    <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\SpanGraph.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\EnableWaves.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\Spawner.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\PlayerAnimator.cs" />
+    <Compile Include="Assets\Scripts\EnemyBehaviour.cs" />
+    <Compile Include="Assets\Scripts\BehaviourTree.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\SpikeTrap.cs" />
+    <Compile Include="Assets\Scripts\Flocking\FlockBehaviourObjects\AvoidanceBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\LevelManager.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\Grid.cs" />
+    <Compile Include="Assets\Scripts\NavMesh\Voxelize\Heightfield.cs" />
+    <Compile Include="Assets\Scripts\Ryans Work\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\Flocking\FlockAgent.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\AABB.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviour.cs" />
     <Compile Include="Assets\Scripts\Sequence.cs" />
@@ -766,6 +766,9 @@
     <Reference Include="Unity.TextMeshPro">
       <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Mathematics.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
@@ -774,9 +777,6 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Mathematics.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Mathematics">
       <HintPath>Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>

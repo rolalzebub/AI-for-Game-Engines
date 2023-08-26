@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Unity.Collections;
@@ -21,7 +22,7 @@ public class Heightfield
     public float XZCellSize;
     public float YCellSize;
 
-    public int gridRows;
+    public int gridRowsX, gridRowsZ;
     public int gridColumns;
 
     #endregion
@@ -51,11 +52,11 @@ public class Heightfield
 
     public void ConvertHeightfieldGridToSpans(Mesh sceneMesh)
     {
-        HeightFieldSpans = new List<HeightfieldSpan>[gridRows - 1, gridRows - 1];
+        HeightFieldSpans = new List<HeightfieldSpan>[gridRowsX - 1, gridRowsZ - 1];
         
-        for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
+        for (int xIndex = 0; xIndex < gridRowsX - 1; xIndex++)
         {
-            for(int zIndex = 0; zIndex < gridRows - 1; zIndex++)
+            for(int zIndex = 0; zIndex < gridRowsZ - 1; zIndex++)
             {
                 HeightFieldSpans[xIndex, zIndex] = new List<HeightfieldSpan>();
                 
@@ -93,7 +94,7 @@ public class Heightfield
     public void CheckHeightfieldAgainstTriangles(Triangle[] walkableTriangles, Mesh sceneMesh)
     {
         //init voxel grid
-        voxelGrid = new HeightfieldVoxel[gridRows - 1, gridColumns - 1, gridRows - 1];
+        voxelGrid = new HeightfieldVoxel[gridRowsX - 1, gridColumns - 1, gridRowsZ - 1];
 
         //jobs method of doing it
         //create triangles collection
@@ -106,13 +107,13 @@ public class Heightfield
         NativeArray<Triangle> walkableTris = new NativeArray<Triangle>(walkableTriangles, Allocator.TempJob);
 
         //create voxels collection
-        NativeArray<HeightfieldVoxel> voxelGridFlatPacked = new NativeArray<HeightfieldVoxel>((gridRows - 1) * (gridRows - 1) * (gridColumns - 1), Allocator.TempJob);
+        NativeArray<HeightfieldVoxel> voxelGridFlatPacked = new NativeArray<HeightfieldVoxel>((gridRowsX - 1) * (gridRowsZ - 1) * (gridColumns - 1), Allocator.TempJob);
 
-        for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
+        for (int xIndex = 0; xIndex < gridRowsX - 1; xIndex++)
         {
             for (int yIndex = 0; yIndex < gridColumns - 1; yIndex++)
             {
-                for (int zIndex = 0; zIndex < gridRows - 1; zIndex++)
+                for (int zIndex = 0; zIndex < gridRowsZ - 1; zIndex++)
                 {
                     Vector3[] voxelVerts = new Vector3[8]
                     {
@@ -124,7 +125,7 @@ public class Heightfield
 
                     //flat pack voxels
                     //formula for 3d index to 1d index conversion = x + (y * gridRows) + (z * gridRows * gridColumns)
-                    int currentIndex = xIndex + (yIndex * (gridRows - 1)) + (zIndex * (gridRows - 1) * (gridColumns - 1));
+                    int currentIndex = xIndex + (yIndex * (gridRowsX - 1)) + (zIndex * (gridRowsX - 1) * (gridColumns - 1));
                     HeightfieldVoxel voxel = new HeightfieldVoxel(voxelVerts, XZCellSize, YCellSize);
                     voxelGridFlatPacked[currentIndex] = voxel;
                 }
@@ -150,13 +151,13 @@ public class Heightfield
         vJobHandle.Complete();
 
         //unpack voxels into grid
-        for (int xIndex = 0; xIndex < gridRows - 1; xIndex++)
+        for (int xIndex = 0; xIndex < gridRowsX - 1; xIndex++)
         {
             for (int yIndex = 0; yIndex < gridColumns - 1; yIndex++)
             {
-                for (int zIndex = 0; zIndex < gridRows - 1; zIndex++)
+                for (int zIndex = 0; zIndex < gridRowsZ - 1; zIndex++)
                 {
-                    int voxelIndex = xIndex + (yIndex * (gridRows - 1)) + (zIndex * (gridRows - 1) * (gridColumns - 1));
+                    int voxelIndex = xIndex + (yIndex * (gridRowsX - 1)) + (zIndex * (gridRowsX - 1) * (gridColumns - 1));
 
                     voxelGrid[xIndex, yIndex, zIndex] = vJob.voxelField[voxelIndex];
                 }
@@ -229,22 +230,26 @@ public class Heightfield
         Bounds voxelBound = new Bounds();
         voxelBound.size = new Vector3(XZCellSize, YCellSize, XZCellSize);
 
-        int XZCellsCount = Mathf.CeilToInt(_sceneBounds.size.x / XZCellSize);
+        int XCellsCount = Mathf.CeilToInt(_sceneBounds.size.x / XZCellSize);
+        int ZCellsCount = Mathf.CeilToInt(_sceneBounds.size.z / XZCellSize);
         int YCellsCount = Mathf.CeilToInt(_sceneBounds.size.y / YCellSize);
 
-        gridRows = XZCellsCount + 1;
+        gridRowsX = XCellsCount + 1;
+        gridRowsZ = ZCellsCount + 1;
         gridColumns = YCellsCount + 1;
-        verts = new Vector3[gridRows, gridColumns, gridRows];
+
+
+        verts = new Vector3[gridRowsX, gridColumns, gridRowsZ];
 
         Vector3 startPos = new Vector3();
         bool firstVert = false;
 
         //create vertices to represent the heightfield grid
-        for (int xIndex = 0; xIndex < gridRows; xIndex++)
+        for (int xIndex = 0; xIndex < gridRowsX; xIndex++)
         {
             for (int yIndex = 0; yIndex < gridColumns; yIndex++)
             {
-                for (int zIndex = 0; zIndex < gridRows; zIndex++)
+                for (int zIndex = 0; zIndex < gridRowsZ; zIndex++)
                 {
                     if (!firstVert)
                     {

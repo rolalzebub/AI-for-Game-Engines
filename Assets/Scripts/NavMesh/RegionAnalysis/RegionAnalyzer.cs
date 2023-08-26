@@ -33,14 +33,14 @@ public class RegionAnalyzer: MonoBehaviour
         
         var heightSpans = heightfield.GetHeightSpans();
 
-        for(int i = 0; i < heightfield.gridRows - 1; i++)
+        for(int i = 0; i < heightfield.gridRowsX - 1; i++)
         {
             if (graph != null)
             {
                 graph.allNodes.Add(new List<List<SpanGraph.SpanGraphNode>>());
             }
 
-            for(int j = 0; j < heightfield.gridRows - 1; j++)
+            for(int j = 0; j < heightfield.gridRowsX - 1; j++)
             {
                 if (graph != null)
                 {
