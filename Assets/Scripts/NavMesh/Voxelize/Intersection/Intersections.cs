@@ -2,8 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class performs checks for intersection between supported shapes.
+/// Supported shapes: AABB-Triangle, AABB-Plane
+/// </summary>
 public static class Intersections
 {
+    /// <summary>
+    /// Check for intersection between a triangle and axis-aligned bounding box.
+    /// </summary>
+    /// <returns>Intersection check result as bool</returns>
     public static bool Intersects(Triangle tri, AABB aabb)
     {
         float p0, p1, p2, r;
@@ -147,11 +155,10 @@ public static class Intersections
         return Intersects(pl, aabb);
     }
 
-    public static bool Intersects(AABB aabb, Triangle tri)
-    {
-        return Intersects(tri, aabb);
-    }
-
+    /// <summary>
+    /// Check for intersection between a plane and axis-aligned bounding box.
+    /// </summary>
+    /// <returns>Intersection check result as bool</returns>
     public static bool Intersects(Plane pl, AABB aabb)
     {
         Vector3 center = aabb.Center,
@@ -161,10 +168,5 @@ public static class Intersections
         var s = Vector3.Dot(pl.Normal, center) - pl.Distance;
 
         return Mathf.Abs(s) <= r;
-    }
-
-    public static bool Intersects(AABB aabb, Plane pl)
-    {
-        return Intersects(aabb, pl);
     }
 }

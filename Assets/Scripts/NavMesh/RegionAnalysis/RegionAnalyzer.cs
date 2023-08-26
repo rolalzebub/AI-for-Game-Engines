@@ -31,7 +31,7 @@ public class RegionAnalyzer: MonoBehaviour
         settings.agentHeight = agentHeight;
         settings.agentRadius = agentRadius;
         
-        var heightSpans = heightfield.GetHeightSpans();
+        var heightSpans = heightfield.GetVerticalSpans();
 
         for(int i = 0; i < heightfield.gridRowsX - 1; i++)
         {
@@ -52,12 +52,12 @@ public class RegionAnalyzer: MonoBehaviour
                     var currentSpan = heightSpans[i, j][k];
 
                     SpanGraph.SpanGraphNode currentNode = new SpanGraph.SpanGraphNode(currentSpan);
-                    if(currentSpan.type == HeightFieldVoxelType.Closed)
+                    if(currentSpan.type == VoxelType.Closed)
                     {
                         //check the span above it
                         if(k < heightSpans[i,j].Count - 1)
                         {
-                            if(heightSpans[i,j][k+1].type == HeightFieldVoxelType.Open)
+                            if(heightSpans[i,j][k+1].type == VoxelType.Open)
                             {
                                 if (heightSpans[i, j][k + 1].GetSpanHeight() >= agentHeight)
                                 {

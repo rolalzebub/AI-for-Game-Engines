@@ -65,10 +65,8 @@
     <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\PathfindingNode.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviourObjects\CompositeBehaviour.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\KillBox.cs" />
-    <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\RegionAnalysisEditor.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviourObjects\CohesionBehaviour.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\Intersections.cs" />
-    <Compile Include="Assets\Scripts\NavMesh\Voxelize\VoxelizeSceneEditor.cs" />
     <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\RegionAnalyzer.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockTesting.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\Testing.cs" />
@@ -76,7 +74,6 @@
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\VoxelizeScene.cs" />
     <Compile Include="Assets\Scripts\Node.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\Pathfinding.cs" />
-    <Compile Include="Assets\Scripts\NavMesh\Voxelize\SceneMeshObject.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\PlayerHandler.cs" />
     <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\SpanGraph.cs" />
@@ -95,6 +92,8 @@
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\AABB.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviour.cs" />
     <Compile Include="Assets\Scripts\Sequence.cs" />
+    <Compile Include="Assets\Scripts\NavMesh\Voxelize\VerticalSpan.cs" />
+    <Compile Include="Assets\Scripts\NavMesh\Voxelize\Voxel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

@@ -11,7 +11,7 @@ public class SpanGraph
     //xz-y ordered list of spans
     public List<List<List<SpanGraphNode>>> allNodes;
 
-    public SpanGraph(HeightfieldSpan rootSpan, AgentSettings _settings)
+    public SpanGraph(VerticalSpan rootSpan, AgentSettings _settings)
     {
         rootNode = new SpanGraphNode(rootSpan);
 
@@ -105,11 +105,11 @@ public class SpanGraph
     {
         public bool isWalkable;
 
-        public HeightfieldSpan span;
+        public VerticalSpan span;
 
         public List<SpanGraphNode> NeighbourNodes;
 
-        public SpanGraphNode(HeightfieldSpan _span)
+        public SpanGraphNode(VerticalSpan _span)
         {
             span = _span;
             NeighbourNodes = new List<SpanGraphNode>();

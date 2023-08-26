@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+/// <summary>
+/// This class voxellizes a scene and creates a grid of vertical spans.
+/// </summary>
 public class VoxelizeScene : MonoBehaviour
 {
     public float XZCellSize;
@@ -69,7 +72,7 @@ public class VoxelizeScene : MonoBehaviour
         if (sceneField == null)
             return;
             
-        var grid = sceneField.GetHeightSpans();
+        var grid = sceneField.GetVerticalSpans();
 
         if (grid == null)
             return;
@@ -86,7 +89,7 @@ public class VoxelizeScene : MonoBehaviour
                     {
                         case DebugHeightSpanDrawMode.Both:
                             { 
-                                if (item.type == HeightFieldVoxelType.Closed)
+                                if (item.type == VoxelType.Closed)
                                 {
                                     Gizmos.color = Color.red;
                                 }
@@ -100,7 +103,7 @@ public class VoxelizeScene : MonoBehaviour
                         case DebugHeightSpanDrawMode.ClosedSpans:
                             {
                                 Gizmos.color = Color.red;
-                                if (item.type == HeightFieldVoxelType.Closed)
+                                if (item.type == VoxelType.Closed)
                                 {
                                     drawCube = true;
                                 }
@@ -109,7 +112,7 @@ public class VoxelizeScene : MonoBehaviour
                         case DebugHeightSpanDrawMode.OpenSpans:
                             {
                                 Gizmos.color = Color.green;
-                                if (item.type == HeightFieldVoxelType.Open)
+                                if (item.type == VoxelType.Open)
                                 {
                                     drawCube = true;
                                 }
