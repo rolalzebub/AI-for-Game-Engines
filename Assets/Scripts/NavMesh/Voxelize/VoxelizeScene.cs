@@ -121,18 +121,14 @@ public class VoxelizeScene : MonoBehaviour
                     }
                     if (drawCube)
                     {
-                        var spanVoxels = item.GetSpanVoxels();
+                        
+                        //draw a cube representing the span
+                        var spanBounds = item.SpanBounds;
+                        Gizmos.DrawCube(spanBounds.Center, spanBounds.Max - spanBounds.Min);
 
-                        Vector3 min = spanVoxels[0].VoxelBounds.Min, max = Vector3.zero;
-
-                        foreach (var voxel in spanVoxels)
-                        {
-                            min = Vector3.Min(min, voxel.VoxelBounds.Min);
-                            max = Vector3.Max(max, voxel.VoxelBounds.Max);
-                        }
-
-                        AABB spanBounds = new AABB(min, max);
-                        Gizmos.DrawWireCube(spanBounds.Center, max - min);
+                        //draw an outline for the span
+                        Gizmos.color = Color.black;
+                        Gizmos.DrawWireCube(spanBounds.Center, spanBounds.Max - spanBounds.Min);
                     }
                 }
             }

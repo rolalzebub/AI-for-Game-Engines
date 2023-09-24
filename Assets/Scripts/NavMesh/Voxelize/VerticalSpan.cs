@@ -12,6 +12,8 @@ public struct VerticalSpan
 
     AABB spanBounds;
 
+    public bool canAgentStandHere;
+
     public AABB SpanBounds
     {
         get
@@ -35,8 +37,8 @@ public struct VerticalSpan
 
     public void CalculateSpanBounds()
     {
-        Vector3 min = Vector3.one;
-        Vector3 max = Vector3.zero;
+        Vector3 min = spanVoxels[0].VoxelBounds.Min;
+        Vector3 max = spanVoxels[0].VoxelBounds.Max;
 
         foreach (var voxel in spanVoxels)
         {
@@ -53,7 +55,10 @@ public struct VerticalSpan
 
         spanBounds = startingVoxel.VoxelBounds;
         type = startingVoxel.type;
+
+        canAgentStandHere = false;
     }
+
 
     /// <summary>
     /// Get vertical size of the span.
@@ -99,6 +104,12 @@ public struct VerticalSpan
         toReturn.bottomRight.z = spanVoxels[spanVoxels.Count - 1].VoxelBounds.Min.z;
 
         return toReturn;
+    }
+
+    //Get only the world up-axis height of the span
+    public float GetSpanCeilingLevel()
+    {
+        return SpanBounds.Max.y;
     }
 }
 

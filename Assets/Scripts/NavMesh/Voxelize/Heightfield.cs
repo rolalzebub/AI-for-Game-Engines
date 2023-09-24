@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using Unity.Collections;
@@ -92,6 +90,8 @@ public class Heightfield
 
     public void CheckHeightfieldAgainstTriangles(Triangle[] walkableTriangles, Mesh sceneMesh)
     {
+        Stopwatch voxellizeTimer = Stopwatch.StartNew();
+
         //init voxel grid
         voxelGrid = new Voxel[gridRowsX - 1, gridColumns - 1, gridRowsZ - 1];
 
@@ -167,6 +167,10 @@ public class Heightfield
         voxelGridFlatPacked.Dispose();
         sceneTriangles.Dispose();
         walkableTris.Dispose();
+
+        voxellizeTimer.Stop();
+
+        UnityEngine.Debug.Log("Voxellization took " + voxellizeTimer.ElapsedMilliseconds + "ms");
 
         #region old method single threaded and main thread blocking way of creating voxel field
         //this code has been left here for documenting reasons
@@ -317,8 +321,9 @@ struct VoxelFieldGenerationJob : IJobParallelFor
 
                 var v = voxelField[index];
                 v.type = VoxelType.Closed;
+                v.intersectingTriangleNormal = triangle.Normal;
 
-                if(walkableTriangles.Contains(triangle))
+                if (walkableTriangles.Contains(triangle))
                 {
                     v.isWalkable = true;
                 }

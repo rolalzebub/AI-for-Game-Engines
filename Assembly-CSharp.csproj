@@ -56,6 +56,7 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\NavMesh\Voxelize\VerticalSpan.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\SceneChanger.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\Plane.cs" />
@@ -86,14 +87,14 @@
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviourObjects\AvoidanceBehaviour.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\Pathfinding\Grid.cs" />
+    <Compile Include="Assets\Scripts\NavMesh\RegionAnalysis\RegionSpan.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Heightfield.cs" />
     <Compile Include="Assets\Scripts\Ryans Work\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockAgent.cs" />
+    <Compile Include="Assets\Scripts\NavMesh\Voxelize\Voxel.cs" />
     <Compile Include="Assets\Scripts\NavMesh\Voxelize\Intersection\AABB.cs" />
     <Compile Include="Assets\Scripts\Flocking\FlockBehaviour.cs" />
     <Compile Include="Assets\Scripts\Sequence.cs" />
-    <Compile Include="Assets\Scripts\NavMesh\Voxelize\VerticalSpan.cs" />
-    <Compile Include="Assets\Scripts\NavMesh\Voxelize\Voxel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

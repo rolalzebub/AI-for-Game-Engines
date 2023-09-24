@@ -17,7 +17,6 @@ public struct Voxel
     public AABB VoxelBounds;
 
     public bool isWalkable;
-
     /// <summary>
     /// Vector3.zero if voxel is open
     /// </summary>
@@ -28,7 +27,6 @@ public struct Voxel
     public Voxel(Vector3[] _vertices, float XZSize, float YSize)
     {
         type = VoxelType.Open;
-        isWalkable = false;
 
         Bounds bounds = new Bounds();
         //vertices = _vertices;
@@ -47,5 +45,7 @@ public struct Voxel
 
         XZCellSize = XZSize;
         YCellSize = YSize;
+
+        isWalkable = false;
     }
 }
