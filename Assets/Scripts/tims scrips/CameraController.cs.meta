@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Scripts/tims scrips/CameraController.cs.meta
 guid: ff8875feeeaa8164abc61c81a6e217b6
+=======
+guid: 7315d24058889bb4da8c959c3f2ebaa2
+>>>>>>> parent of d3351566 (new):Assets/StarterAssets/Editor/PackageChecker/PackageChecker.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
